@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>회원가입</title>
+    <script>
+        function checkUsername(username) {
+            fetch(`/api/users/check-username?username=${username}`)
+                .then(response => response.json())
+                .then(data => {
+                    // 사용자 이름 중복 여부에 따른 로직 구현
+                    const usernameError = document.getElementById('usernameError');
+                    if (data) {
+                        usernameError.textContent = '이미 사용 중인 아이디입니다.';
+                    } else {
+                        usernameError.textContent = '';
+                    }
+                })
+                .catch(error => console.error(error));
+        }
+
+        function checkEmail(email) {
+            fetch(`/api/users/check-email?email=${email}`)
+                .then(response => response.json())
+                .then(data => {
+                    // 이메일 중복 여부에 따른 로직 구현
+                    const emailError = document.getElementById('emailError');
+                    if (data) {
+                        emailError.textContent = '이미 사용 중인 이메일입니다.';
+                    } else {
+                        emailError.textContent = '';
+                    }
+                })
+                .catch(error => console.error(error));
+        }
+    </script>
+</head>
+<link rel="stylesheet" href="common.css">
+<body>
+<h1>회원가입</h1>
+<form th:action="@{/register}" th:object="${user}" method="post">
+    <label for="username">ID:</label>
+    <input type="text" id="username" th:field="*{username}" required onblur="checkUsername(this.value)">
+    <span id="usernameError" class="error"></span>
+    <div class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+    <br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" th:field="*{password}" required>
+    <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+    <br>
+    <label for="name">Name:</label>
+    <input type="text" id="name" th:field="*{name}" required>
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+    <br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" th:field="*{email}" required onblur="checkEmail(this.value)">
+    <div id="emailError" class="error"></div>
+    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+    <br>
+    <button type="submit">Register</button>
+    <a th:href="@{/}">메인으로</a>
+</form>
+</body>
+</html>

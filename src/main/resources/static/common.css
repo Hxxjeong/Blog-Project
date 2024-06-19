@@ -1,0 +1,58 @@
+.error {
+    color: red;
+}
+
+/* main page */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f2f2f2;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+}
+
+nav a {
+    margin-left: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+.profile-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.profile-list {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    list-style-type: none;
+    margin-top: 5px;
+}
+
+.profile-list li {
+    margin-bottom: 5px;
+}
+
+.profile-list a {
+    text-decoration: none;
+    color: #333;
+}
+
+.profile-container {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-container.show .profile-list {
+    display: block;
+}
