@@ -1,4 +1,4 @@
-package com.example.blogproject.init;
+package com.example.blogproject.global.init;
 
 import com.example.blogproject.user.User;
 import com.example.blogproject.user.UserRepository;
