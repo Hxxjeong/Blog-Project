@@ -5,21 +5,7 @@
     <link rel="stylesheet" href="common.css">
 </head>
 <body>
-<header>
-    <h1>Blog</h1>
-    <nav>
-        <!-- 로그인 상태에 따라 다른 링크를 표시 -->
-        <a th:if="${session.auth_token}" th:href="@{/logout}">Logout</a>
-        <a th:unless="${session.auth_token}" th:href="@{/loginform}">Login</a>
-        <div th:if="${session.auth_token}" class="profile-container">
-            <img th:src="@{/profile-image}" alt="Profile Image" class="profile-icon" onclick="toggleProfileList(this)">
-            <ul class="profile-list">
-                <li><a th:href="@{'/@'+ 'username'}">User Blog</a></li>
-                <li><a th:href="@{/logout}">Logout</a></li>
-            </ul>
-        </div>
-    </nav>
-</header>
+<div th:replace="fragments/header :: header"></div>
 
 <main>
     <!-- 포스트 목록 표시 공간 -->

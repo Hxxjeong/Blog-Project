@@ -6,22 +6,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-//    private final RoleRepository roleRepository;
 
     // main
     @GetMapping("/")
@@ -92,7 +88,8 @@ public class UserController {
 
             Cookie cookie = new Cookie("auth_token", token);
             cookie.setHttpOnly(true);
-            cookie.setMaxAge(24 * 60 * 60); // 1day
+            cookie.setPath("/");
+//            cookie.setMaxAge(24 * 60 * 60); // 1day   // 만료 시간을 제거하면 세션 쿠키가 됨
             response.addCookie(cookie);
 
             // 세션에 auth_token 저장
@@ -124,5 +121,12 @@ public class UserController {
             if(session != null) session.invalidate();
         }
         return "redirect:/";
+    }
+
+    // 회원 정보
+    @GetMapping("/setting")
+    public String getUserInfo() {
+
+        return "/user/info";
     }
 }

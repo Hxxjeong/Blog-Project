@@ -1,6 +1,7 @@
 package com.example.blogproject.user;
 
 import com.example.blogproject.blog.Blog;
+import com.example.blogproject.role.Role;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -36,31 +39,26 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    private int role; // user: 1, admin: 0
-
     @CreatedDate
     @Column(name = "registration_date") // 가입 날짜
     private LocalDateTime date;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "user_roles",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id")
-//    )
-//    private Set<Role> roles = new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private List<Role> roles = new ArrayList<>();
 
-    // 외래키를 가지고 있는 테이블이 먼저 생성되는 것 방지 (Eager Loading)
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Blog> blogs = new HashSet<>();
 
     @Builder
-    public User(String username, String password, String name, String email, int role) {
+    public User(String username, String password, String name, String email) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.email = email;
-        this.role = role;
     }
 }

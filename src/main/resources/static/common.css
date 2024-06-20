@@ -7,8 +7,20 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
-    background-color: #f2f2f2;
+    padding: 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+header h1 {
+    display: inline;
+    margin: 0;
+    font-size: 24px;
 }
 
 nav {
@@ -32,15 +44,22 @@ nav a {
 .profile-list {
     display: none;
     position: absolute;
+    top: 35px;
+    right: 0;
     background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    padding: 10px;
-    list-style-type: none;
-    margin-top: 5px;
+    padding: 5px;
+    /*list-style-type: none;*/
+    list-style: none;
+    margin: 0;
+    width: max-content;
 }
 
 .profile-list li {
     margin-bottom: 5px;
+    padding: 10px;
 }
 
 .profile-list a {

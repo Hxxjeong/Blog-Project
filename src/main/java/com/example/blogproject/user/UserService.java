@@ -1,5 +1,7 @@
 package com.example.blogproject.user;
 
+import com.example.blogproject.role.Role;
+import com.example.blogproject.role.RoleRepository;
 import com.example.blogproject.user.token.TokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,6 +16,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     // 비밀번호 해싱을 위한 객체
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final TokenRepository tokenRepository;
@@ -24,7 +27,10 @@ public class UserService {
         // 비밀번호 해싱
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
-        user.setRole(1);    // 일반 유저
+
+        Role role = roleRepository.findByName("ROLE_USER").get();
+
+        user.getRoles().add(role); // 일반 유저
 
         return userRepository.save(user);
     }
@@ -41,6 +47,11 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("유저를 찾을 수 없습니다."));
         return user;
+    }
+
+    // 회원 삭제
+    public void delete(Long id) {
+        userRepository.deleteById(id);
     }
 
     // 비밀번호 확인
