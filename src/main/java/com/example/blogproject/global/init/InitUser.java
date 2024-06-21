@@ -28,23 +28,30 @@ public class InitUser implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         String hashedPassword = passwordEncoder.encode(adminPassword);
 
-        // InitRole보다 먼저 생성될 때 고려
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN")
-                .orElseGet(() -> {
-                    Role newAdminRole = Role.builder().name("ROLE_ADMIN").build();
-                    return roleRepository.save(newAdminRole);
-                });
+        Role user = Role.builder()
+                .name("ROLE_USER")
+                .build();
+
+        Role admin = Role.builder()
+                .name("ROLE_ADMIN")
+                .build();
+
+        roleRepository.save(user);
+        roleRepository.save(admin);
+
+        // 관리자 유저
+        Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
 
         // 관리자 계정 생성
-        User admin = User.builder()
+        User adminUser = User.builder()
                 .username("admin")
                 .password(hashedPassword)
                 .name("admin")
                 .email("admin@blog.com")
                 .build();
 
-        admin.getRoles().add(adminRole);    // 관리자
+        adminUser.getRoles().add(adminRole);    // 관리자
 
-        userRepository.save(admin);
+        userRepository.save(adminUser);
     }
 }
