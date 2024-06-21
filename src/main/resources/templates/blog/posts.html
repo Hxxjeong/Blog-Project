@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Main Page</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/blog.css">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<main>
+    <aside class="tag-list">
+        <!-- 태그 목록 표시 공간 -->
+        <h2>태그 목록</h2>
+        <!-- 태그 목록 아이템 -->
+        <ul>
+            <li><a href="#">전체 보기 (태그 개수)</a></li>
+            <li><a href="#">예시 태그 (태그 개수)</a></li>
+        </ul>
+    </aside>
+    <section class="post-section">
+        <div class="nav-links">
+            <ul>
+                <li><a href="#" class="active">글</a></li>
+                <li><a href="#">시리즈</a></li>
+                <li><a href="#">소개</a></li>
+            </ul>
+        </div>
+        <div class="post-list">
+            <!-- 포스트 목록 표시 공간 -->
+            <article class="post">
+                <h3>제목</h3>
+                <p>내용</p>
+                <span class="tag">태그</span>
+                <span class="info">작성일, 댓글 수, 좋아요, 공개/비공개 여부</span>
+            </article>
+        </div>
+    </section>
+</main>
+
+<script type="text/javascript" th:src="@{/js/showProfile.js}"></script>
+
+</body>
+</html>

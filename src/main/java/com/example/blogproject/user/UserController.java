@@ -122,11 +122,4 @@ public class UserController {
         }
         return "redirect:/";
     }
-
-    // 회원 정보
-    @GetMapping("/setting")
-    public String getUserInfo() {
-
-        return "/user/info";
-    }
 }

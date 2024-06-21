@@ -1,0 +1,129 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+nav {
+    display: inline-block;
+    float: right;
+}
+
+nav a {
+    margin-left: 15px;
+    text-decoration: none;
+    color: #333;
+}
+
+main {
+    display: flex;
+    padding: 20px;
+}
+
+.tag-list {
+    width: 20%;
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+}
+
+.tag-list h2 {
+    font-size: 18px;
+    margin: 0 0 20px;
+}
+
+.tag-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tag-list ul li {
+    margin-bottom: 10px;
+}
+
+.tag-list ul li a {
+    text-decoration: none;
+    color: #333;
+}
+
+.post-section {
+    width: 80%;
+    padding: 20px;
+}
+
+.nav-links {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+    align-content: center;
+
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.nav-links ul li {
+    margin-right: 20px;
+}
+
+.nav-links ul li a {
+    text-decoration: none;
+    color: #333;
+    padding-bottom: 5px;
+    display: block;
+}
+
+.nav-links ul li a.active,
+.nav-links ul li a:hover {
+    border-bottom: 2px solid #333;
+}
+
+.post-list {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.post {
+    border-bottom: 1px solid #ddd;
+    padding: 15px 0;
+}
+
+.post:last-child {
+    border-bottom: none;
+}
+
+.post h3 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.post p {
+    margin: 10px 0;
+    color: #555;
+}
+
+.tag {
+    display: inline-block;
+    background-color: #eee;
+    color: #333;
+    border-radius: 3px;
+    padding: 2px 8px;
+    font-size: 12px;
+}
+
+.info {
+    display: block;
+    font-size: 12px;
+    color: #999;
+    margin-top: 10px;
+}
