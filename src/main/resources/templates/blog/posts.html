@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Main Page</title>
-    <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="css/blog.css">
+    <title th:text="${user.username + '의 블로그'}">Blog</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/blog.css}">
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
@@ -21,19 +21,36 @@
     <section class="post-section">
         <div class="nav-links">
             <ul>
-                <li><a href="#" class="active">글</a></li>
+                <li><a th:href="@{'/@' + ${blog.name}}" class="active">글</a></li>
                 <li><a href="#">시리즈</a></li>
                 <li><a href="#">소개</a></li>
             </ul>
         </div>
         <div class="post-list">
             <!-- 포스트 목록 표시 공간 -->
-            <article class="post">
-                <h3>제목</h3>
-                <p>내용</p>
-                <span class="tag">태그</span>
-                <span class="info">작성일, 댓글 수, 좋아요, 공개/비공개 여부</span>
+            <article class="post" th:each="post: ${posts}">
+                <h3 th:text="${post.title}">제목</h3>
+                <p th:text="${#strings.abbreviate(post.content, 200)}">내용</p>
+                <span class="tag" th:each="tag: ${post.tags}" th:text="${tag.name}">태그</span>
+                <span class="info" th:text="${#temporals.format(post.createAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+<!--                <span class="info" th:text="${post.commentCount + ' 댓글'}">댓글 수</span>-->
+                <span class="info" th:text="${post.likes + ' 좋아요'}">좋아요</span>
+                <span class="info" th:text="${post.isSecret ? '비공개' : '공개'}">공개/비공개 여부</span>
             </article>
+        </div>
+        <!-- 페이징 처리 -->
+        <div class="pagination" th:if="${posts.totalPages > 0}">
+            <span th:if="${posts.hasPrevious()}">
+                <a th:href="@{'/@' + ${blog.name}(page=${posts.number - 1})}">이전</a>
+            </span>
+            <span th:each="pageNumber : ${#numbers.sequence(0, posts.totalPages - 1)}">
+                <a th:href="@{'/@' + ${blog.name}(page=${pageNumber})}"
+                   th:text="${pageNumber + 1}"
+                   th:class="${pageNumber == posts.number} ? active"></a>
+            </span>
+            <span th:if="${posts.hasNext()}">
+                <a th:href="@{'/@' + ${blog.name}(page=${posts.number + 1})}">다음</a>
+            </span>
         </div>
     </section>
 </main>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Post Form</title>
+    <style>
+        .button {
+            background-color: #8b4513;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #a0522d;
+        }
+    </style>
+    <link rel="stylesheet" th:href="@{/css/form.css}">
+</head>
+<body>
+<form id="postForm" th:action="@{/post}" method="post" enctype="multipart/form-data">
+    <h1>글 작성</h1>
+    <div>
+        <label for="title">제목</label>
+        <input type="text" id="title" name="title" required/>
+    </div>
+    <div>
+        <label for="tags">태그 (쉼표로 구분합니다.)</label>
+        <input type="text" id="tags" name="tags" required/>
+    </div>
+    <div>
+        <label for="content">내용</label>
+        <textarea id="content" name="content" rows="10" cols="50" required></textarea>
+    </div>
+    <div>
+        <label for="image">이미지 추가</label>
+        <input type="file" id="image" name="image"/>
+        <img src="https://example.com/path/to/image.png" alt="uploaded image" id="uploadedImage"/>
+    </div>
+    <!-- 공개/비공개 -->
+    <input type="hidden" id="publishStatus" name="publishStatus" value="false"/>
+    <div>
+        <button type="button" class="button" id="saveDraft">임시저장</button>
+        <button type="button" class="button" id="publishPost">완료</button>
+    </div>
+</form>
+
+<script>
+    document.getElementById('image').addEventListener('change', function (event) {
+        const reader = new FileReader();
+        reader.onload = function () {
+            document.getElementById('uploadedImage').src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    });
+
+    document
+        .getElementById("publishPost")
+        .addEventListener("click", function () {
+            document.getElementById("publishStatus").value = "true";
+            document.getElementById("postForm").submit();
+        });
+
+    document
+        .getElementById("saveDraft")
+        .addEventListener("click", function () {
+            document.getElementById("publishStatus").value = "false";
+            document.getElementById("postForm").submit();
+        });
+
+</script>
+</body>
+</html>
