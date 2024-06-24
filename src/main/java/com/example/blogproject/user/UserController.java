@@ -38,8 +38,7 @@ public class UserController {
     // 회원가입
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("user") User user,
-                           BindingResult bindingResult,
-                           Model model) {
+                           BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return "register";
 
         boolean isUsernameDuplicated = false;
