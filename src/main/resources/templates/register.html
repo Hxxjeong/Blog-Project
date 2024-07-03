@@ -55,7 +55,7 @@
     <label for="email">Email:</label>
     <input type="email" id="email" th:field="*{email}" required onblur="checkEmail(this.value)">
     <div id="emailError" class="error"></div>
-    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+    <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
     <br>
     <button type="submit">Register</button>
     <a th:href="@{/}">메인으로</a>

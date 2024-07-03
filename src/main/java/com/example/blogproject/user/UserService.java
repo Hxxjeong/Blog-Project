@@ -5,9 +5,11 @@ import com.example.blogproject.role.RoleRepository;
 import com.example.blogproject.user.token.TokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -18,7 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     // 비밀번호 해싱을 위한 객체
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
     private final TokenRepository tokenRepository;
 
     // 회원 가입
@@ -28,9 +30,9 @@ public class UserService {
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
 
-        Role role = roleRepository.findByName("ROLE_USER").get();
-
-        user.getRoles().add(role); // 일반 유저
+        // 일반 유저
+        Role role = roleRepository.findByName("USER").get();
+        user.setRoles(Collections.singleton(role));
 
         return userRepository.save(user);
     }

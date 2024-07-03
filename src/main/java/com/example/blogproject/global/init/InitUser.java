@@ -29,18 +29,18 @@ public class InitUser implements ApplicationRunner {
         String hashedPassword = passwordEncoder.encode(adminPassword);
 
         Role user = Role.builder()
-                .name("ROLE_USER")
+                .name("USER")
                 .build();
 
         Role admin = Role.builder()
-                .name("ROLE_ADMIN")
+                .name("ADMIN")
                 .build();
 
         roleRepository.save(user);
         roleRepository.save(admin);
 
         // 관리자 유저
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
+        Role adminRole = roleRepository.findByName("ADMIN").get();
 
         // 관리자 계정 생성
         User adminUser = User.builder()

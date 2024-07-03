@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Header Fragment</title>
 </head>
@@ -9,12 +9,12 @@
     <a th:href="@{/}"><h1>Blog</h1></a>
     <nav>
         <a class="button" th:href="@{/write}">새 글 작성</a>
-        <a th:unless="${session.auth_token}" th:href="@{/loginform}">Login</a>
-        <div th:if="${session.auth_token}" class="profile-container">
+        <a sec:authorize="isAnonymous()" th:href="@{/loginform}">Login</a>
+        <div sec:authorize="isAuthenticated()" class="profile-container">
             <img th:src="@{/profile-image.png}" alt="Profile Image" class="profile-icon" onclick="toggleProfileList(this)">
             <ul class="profile-list">
-                <li><a th:href="@{'/@' + ${session.username}}">내 블로그</a></li>
-                <li><a th:href="@{'/setting'}">내 정보</a></li>
+                <li><a th:href="@{'/@' + ${#authentication.name}}">내 블로그</a></li>
+                <li><a th:href="@{/setting}">내 정보</a></li>
                 <li><a th:href="@{/logout}">Logout</a></li>
             </ul>
         </div>
