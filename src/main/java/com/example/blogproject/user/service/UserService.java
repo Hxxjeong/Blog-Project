@@ -26,8 +26,6 @@ public class UserService {
     // 비밀번호 해싱을 위한 객체
     private final PasswordEncoder passwordEncoder;
 
-    private final BlogService blogService;
-
     // 회원 가입
     @Transactional
     public User join(User user) {
@@ -38,8 +36,6 @@ public class UserService {
         // 일반 유저
         Role role = roleRepository.findByName("USER").get();
         user.setRoles(Collections.singleton(role));
-
-        blogService.create(user.getId());   // 회원가입 시 블로그 생성
 
         return userRepository.save(user);
     }

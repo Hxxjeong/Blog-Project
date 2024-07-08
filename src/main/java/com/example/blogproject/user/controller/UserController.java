@@ -1,5 +1,6 @@
 package com.example.blogproject.user.controller;
 
+import com.example.blogproject.blog.BlogService;
 import com.example.blogproject.user.service.UserService;
 import com.example.blogproject.user.entity.User;
 import jakarta.servlet.http.Cookie;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final BlogService blogService;
 
     // main
     @GetMapping("/")
@@ -73,6 +75,10 @@ public class UserController {
         }
 
         userService.join(user);
+
+        // 블로그 생성
+        blogService.create(user.getId());
+
         return "redirect:/welcome";
     }
 
