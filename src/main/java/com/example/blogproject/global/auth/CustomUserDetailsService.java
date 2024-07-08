@@ -1,8 +1,8 @@
 package com.example.blogproject.global.auth;
 
 import com.example.blogproject.role.Role;
-import com.example.blogproject.user.User;
-import com.example.blogproject.user.UserRepository;
+import com.example.blogproject.user.entity.User;
+import com.example.blogproject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

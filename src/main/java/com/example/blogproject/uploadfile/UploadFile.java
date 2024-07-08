@@ -2,7 +2,7 @@ package com.example.blogproject.uploadfile;
 
 import com.example.blogproject.global.entity.BaseTimeEntity;
 import com.example.blogproject.post.Post;
-import com.example.blogproject.user.User;
+import com.example.blogproject.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

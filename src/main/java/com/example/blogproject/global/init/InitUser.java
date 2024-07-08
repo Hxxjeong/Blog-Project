@@ -1,9 +1,10 @@
 package com.example.blogproject.global.init;
 
+import com.example.blogproject.blog.BlogService;
 import com.example.blogproject.role.Role;
 import com.example.blogproject.role.RoleRepository;
-import com.example.blogproject.user.User;
-import com.example.blogproject.user.UserRepository;
+import com.example.blogproject.user.entity.User;
+import com.example.blogproject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -18,6 +19,8 @@ public class InitUser implements ApplicationRunner {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    private final BlogService blogService;
 
     // 환경변수 설정
     @Value("${adminpw}")
@@ -53,5 +56,7 @@ public class InitUser implements ApplicationRunner {
         adminUser.getRoles().add(adminRole);    // 관리자
 
         userRepository.save(adminUser);
+
+        blogService.create(adminUser.getId());
     }
 }
