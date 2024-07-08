@@ -29,8 +29,7 @@ public class Post extends BaseTimeEntity {
     private String title;
 
     @NotNull
-    @Lob    // 긴 텍스트 저장
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "longtext")
     private String content;
 
     private String image;
