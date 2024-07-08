@@ -10,7 +10,6 @@ import com.example.blogproject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -79,7 +78,8 @@ public class PostService {
     }
 
     // 파일 저장
-    private UploadFile saveImage(MultipartFile image, User user) throws IOException {
+    @Transactional
+    public UploadFile saveImage(MultipartFile image, User user) throws IOException {
         String originName = image.getOriginalFilename();
         String storedName = System.currentTimeMillis() + "_" + originName;  // 유니크한 이름 지정
 
@@ -101,10 +101,9 @@ public class PostService {
     }
 
     // 게시글 한 개 조회
-    public Post getPost(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다."));
-
-        return postRepository.findByUserId(user.getId());
+    @Transactional(readOnly = true)
+    public Post getPostById(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new NoSuchElementException("포스트를 찾을 수 없습니다."));
     }
 }

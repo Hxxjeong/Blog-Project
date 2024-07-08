@@ -1,10 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="${post.title}">포스트 제목</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/post.css}">
 </head>
 <body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="post-container">
+    <h1 th:text="${post.title}">title</h1>
+
+    <div class="post-details">
+        <span th:text="${post.user.username}">작성자</span> |
+        <span th:text="${#temporals.format(post.createAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+    </div>
+
+    <div class="post-tags">
+        <span th:each="tag: ${post.tags}" th:text="${tag.name}">태그</span>
+    </div>
+
+    <hr>
+
+    <div th:utext="${post.content}">content</div>
+
+    <div class="post-image" th:if="${post.image}">
+        <img th:src="@{'/images/' + ${post.image}}" alt="Post Image">
+    </div>
+</div>
+
+<div class="button-container">
+    <button type="button" onclick="window.history.back();">뒤로가기</button>
+</div>
+
+<script type="text/javascript" th:src="@{/js/showProfile.js}"></script>
 
 </body>
 </html>

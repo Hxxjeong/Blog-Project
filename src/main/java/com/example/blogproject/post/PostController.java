@@ -29,7 +29,7 @@ public class PostController {
         // 로그인한 사용자인지 확인
         String username = authentication.getName();
         log.info("username = {}", authentication.getName());
-        if(authentication == null || username == null) return "redirect:/loginform";
+        if (authentication == null || username == null) return "redirect:/loginform";
 
         model.addAttribute("username", authentication.getName());
 
@@ -40,14 +40,14 @@ public class PostController {
     public String create(@RequestParam("title") String title,
                          @RequestParam("tags") String tags,
                          @RequestParam("content") String content,
-                         @RequestParam("image")MultipartFile image,
+                         @RequestParam("image") MultipartFile image,
                          @RequestParam("isSecret") boolean isSecret,
                          @RequestParam("isTemp") boolean isTemp,
                          Authentication authentication,
                          Model model) {
         // 로그인한 유저인지 확인
         String username = authentication.getName();
-        if(authentication == null || username == null) return "redirect:/loginform";
+        if (authentication == null || username == null) return "redirect:/loginform";
 
         if (title == null || title.trim().isEmpty() || content == null || content.trim().isEmpty()) {
             // 제목 또는 내용이 비어있을 경우 에러 처리
@@ -69,9 +69,23 @@ public class PostController {
         return "redirect:/@" + blogName;
     }
 
-    @GetMapping("/@{name}/{title}")
-    public String getPost(@PathVariable("name") String name, @PathVariable("title") String title) {
+    // 게시물 한 개 조회
+    @GetMapping("/@{username}/{postId}")
+    public String getPost(@PathVariable("username") String username,
+                          @PathVariable("postId") Long postId,
+                          Model model,
+                          Authentication authentication) {
+        Post post = postService.getPostById(postId);
 
+        // 로그인한 사용자인지 확인 (비공개글 확인)
+        String loginUsername = authentication != null ? authentication.getName() : null;
+        User currentUser = loginUsername != null ? userService.findByUsername(loginUsername) : null;
+
+        if (post.isSecret() && (currentUser == null || !post.getUser().getUsername().equals(loginUsername))) {
+            return "redirect:/";
+        }
+
+        model.addAttribute("post", post);
         return "blog/postDetail";
     }
 }
