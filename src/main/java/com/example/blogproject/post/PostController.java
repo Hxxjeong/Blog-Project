@@ -1,13 +1,10 @@
 package com.example.blogproject.post;
 
-import com.example.blogproject.user.User;
-import com.example.blogproject.user.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import com.example.blogproject.user.entity.User;
+import com.example.blogproject.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,18 +18,20 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class PostController {
     private final PostService postService;
     private final UserService userService;
 
     // 포스트 작성
     @GetMapping("/write")
-    public String postForm(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        // 로그인한 사용자가 아니면 로그인 페이지로 이동
-        if(session == null || session.getAttribute("username") == null) {
-            return "redirect:/login";
-        }
+    public String postForm(Authentication authentication, Model model) {
+        // 로그인한 사용자인지 확인
+        String username = authentication.getName();
+        log.info("username = {}", authentication.getName());
+        if(authentication == null || username == null) return "redirect:/loginform";
+
+        model.addAttribute("username", authentication.getName());
 
         return "blog/postform";
     }
@@ -42,21 +41,31 @@ public class PostController {
                          @RequestParam("tags") String tags,
                          @RequestParam("content") String content,
                          @RequestParam("image")MultipartFile image,
-                         HttpServletRequest request) {
+                         @RequestParam("isSecret") boolean isSecret,
+                         @RequestParam("isTemp") boolean isTemp,
+                         Authentication authentication,
+                         Model model) {
         // 로그인한 유저인지 확인
-        HttpSession session = request.getSession(false);
-        if(session == null || session.getAttribute("username") == null) {
-            return "redirect:/login";
-        }
-        String username = (String) session.getAttribute("username");
-        User user = userService.findUser(username);
+        String username = authentication.getName();
+        if(authentication == null || username == null) return "redirect:/loginform";
+
+        User user = userService.findByUsername(authentication.getName());
+        String blogName = user.getBlog().getName();
+        model.addAttribute("user", user);
 
         // 태그 쉼표로 구분
         List<String> tagNames = Arrays.asList(tags.split(","));
 
         // 포스트 저장
-        postService.create(user.getId(), title, content, image, tagNames);
+        Post post = postService.create(user.getId(), title, content, image, isSecret, isTemp, tagNames);
+        model.addAttribute("post", post);
 
-        return "redirect:/@" + username;
+        return "redirect:/@" + blogName;
+    }
+
+    @GetMapping("/@{name}/{title}")
+    public String getPost(@PathVariable("name") String name, @PathVariable("title") String title) {
+
+        return "blog/postDetail";
     }
 }

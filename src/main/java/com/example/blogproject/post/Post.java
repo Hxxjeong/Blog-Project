@@ -2,7 +2,7 @@ package com.example.blogproject.post;
 
 import com.example.blogproject.global.entity.BaseTimeEntity;
 import com.example.blogproject.tag.Tag;
-import com.example.blogproject.user.User;
+import com.example.blogproject.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,11 +24,12 @@ public class Post extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
-    @Column(nullable = false)
 
+    @Column(nullable = false)
     private String title;
-    @Column(nullable = false)
 
+    @Lob    // 긴 텍스트 저장
+    @Column(nullable = false)
     private String content;
 
     private String image;

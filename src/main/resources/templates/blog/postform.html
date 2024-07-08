@@ -3,20 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Post Form</title>
-    <style>
-        .button {
-            background-color: #8b4513;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-        }
-
-        .button:hover {
-            background-color: #a0522d;
-        }
-    </style>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/form.css}">
+    <link rel="stylesheet" th:href="@{/css/postForm.css}">
 </head>
 <body>
 <form id="postForm" th:action="@{/post}" method="post" enctype="multipart/form-data">
@@ -31,22 +20,36 @@
     </div>
     <div>
         <label for="content">내용</label>
-        <textarea id="content" name="content" rows="10" cols="50" required></textarea>
+        <div id="editor"></div>
+        <textarea id="content" name="content" style="display:none;"></textarea>
     </div>
     <div>
         <label for="image">이미지 추가</label>
         <input type="file" id="image" name="image"/>
-        <img src="https://example.com/path/to/image.png" alt="uploaded image" id="uploadedImage"/>
+        <img src="" alt="uploaded image" id="uploadedImage"/>
     </div>
-    <!-- 공개/비공개 -->
-    <input type="hidden" id="publishStatus" name="publishStatus" value="false"/>
-    <div>
-        <button type="button" class="button" id="saveDraft">임시저장</button>
-        <button type="button" class="button" id="publishPost">완료</button>
+    <input type="hidden" id="isSecretInput" name="isSecret"/>
+    <input type="hidden" id="isTempInput" name="isTemp"/>
+    <div class="button-container">
+        <div class="checkbox-container">
+            <input type="checkbox" id="isSecretCheckbox"/>
+            <label for="isSecretCheckbox">비공개</label>
+        </div>
+        <div>
+            <button type="button" class="button" id="saveDraft">임시저장</button>
+            <button type="button" class="button" id="publishPost">완료</button>
+            <button type="button" class="button" id="exit">나가기</button>
+        </div>
     </div>
 </form>
 
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script>
+    const quill = new Quill('#editor', {
+        theme: 'snow',
+        placeholder: '내용을 입력하세요...'
+    });
+
     document.getElementById('image').addEventListener('change', function (event) {
         const reader = new FileReader();
         reader.onload = function () {
@@ -55,20 +58,23 @@
         reader.readAsDataURL(event.target.files[0]);
     });
 
-    document
-        .getElementById("publishPost")
-        .addEventListener("click", function () {
-            document.getElementById("publishStatus").value = "true";
-            document.getElementById("postForm").submit();
-        });
+    document.getElementById('publishPost').addEventListener('click', function () {
+        document.getElementById('isSecretInput').value = document.getElementById('isSecretCheckbox').checked;
+        document.getElementById('isTempInput').value = false;
+        document.getElementById('content').value = quill.root.innerHTML;
+        document.getElementById('postForm').submit();
+    });
 
-    document
-        .getElementById("saveDraft")
-        .addEventListener("click", function () {
-            document.getElementById("publishStatus").value = "false";
-            document.getElementById("postForm").submit();
-        });
+    document.getElementById('saveDraft').addEventListener('click', function () {
+        document.getElementById('isSecretInput').value = document.getElementById('isSecretCheckbox').checked;
+        document.getElementById('isTempInput').value = true;
+        document.getElementById('content').value = quill.root.innerHTML;
+        document.getElementById('postForm').submit();
+    });
 
+    document.getElementById('exit').addEventListener('click', function () {
+        window.history.back();  // 뒤로 가기
+    });
 </script>
 </body>
 </html>

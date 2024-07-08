@@ -5,11 +5,12 @@ import com.example.blogproject.tag.Tag;
 import com.example.blogproject.tag.TagRepository;
 import com.example.blogproject.uploadfile.UploadFile;
 import com.example.blogproject.uploadfile.UploadFileRepository;
-import com.example.blogproject.user.User;
-import com.example.blogproject.user.UserRepository;
+import com.example.blogproject.user.entity.User;
+import com.example.blogproject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,7 +32,7 @@ public class PostService {
 
     // 글 작성
     @Transactional
-    public Post create(Long userId, String title, String content, MultipartFile image, List<String> tagNames) {
+    public Post create(Long userId, String title, String content, MultipartFile image, boolean isSecret, boolean isTemp ,List<String> tagNames) {
         // 유저 찾기
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("유저를 찾을 수 없습니다."));
@@ -52,12 +53,11 @@ public class PostService {
             tags.add(tag);
         }
 
-        // 포스트 생성 (기본으로 공개 글)
         Post post = Post.builder()
                 .title(title)
                 .content(content)
-                .isSecret(false)
-                .isTemp(false)
+                .isSecret(isSecret)
+                .isTemp(isTemp)
                 .user(user)
                 .tags(tags)
                 .build();
@@ -96,7 +96,15 @@ public class PostService {
     }
 
     // 게시글 전체 조회
-    public Page<Post> getPosts(Long userId, Pageable pageable) {
-        return postRepository.findByUserIdOrderByCreateAtDesc(userId, pageable);
+    public Page<Post> getPosts(Long userId, String username, Pageable pageable) {
+        return postRepository.findByUserIdAndIsSecretFalseOrUserUsernameOrderByCreateAtDesc(userId, username, pageable);
+    }
+
+    // 게시글 한 개 조회
+    public Post getPost(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다."));
+
+        return postRepository.findByUserId(user.getId());
     }
 }
