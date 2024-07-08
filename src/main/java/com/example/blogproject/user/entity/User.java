@@ -1,4 +1,4 @@
-package com.example.blogproject.user;
+package com.example.blogproject.user.entity;
 
 import com.example.blogproject.blog.Blog;
 import com.example.blogproject.role.Role;

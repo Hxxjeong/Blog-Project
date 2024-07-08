@@ -1,5 +1,7 @@
-package com.example.blogproject.user;
+package com.example.blogproject.user.controller;
 
+import com.example.blogproject.user.service.UserService;
+import com.example.blogproject.user.entity.User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,7 +26,13 @@ public class UserController {
     public String index() { return "index"; }
 
     @GetMapping("/loginform")
-    public String loginForm() { return "login"; }
+    public String loginForm(HttpServletRequest request, Model model) {
+        String errorMessage = (String) request.getAttribute("errorMessage");
+        if (errorMessage != null) {
+            model.addAttribute("error", errorMessage);
+        }
+        return "login";
+    }
 
     @GetMapping("/userregform")
     public String userRegForm(Model model) {
@@ -45,7 +53,7 @@ public class UserController {
         boolean isEmailDuplicated = false;
 
         try {
-            userService.findUser(user.getUsername());
+            userService.findByUsername(user.getUsername());
             isUsernameDuplicated = true;
             bindingResult.rejectValue("username", "error.user", "이미 존재하는 id입니다.");
         } catch (NoSuchElementException e) {
@@ -53,7 +61,7 @@ public class UserController {
         }
 
         try {
-            userService.findEmail(user.getEmail());
+            userService.findUserByEmail(user.getEmail());
             isEmailDuplicated = true;
             bindingResult.rejectValue("email", "error.user", "이미 존재하는 이메일입니다.");
         } catch (NoSuchElementException e) {
@@ -76,7 +84,7 @@ public class UserController {
                         HttpServletResponse response,
                         Model model) {
         try {
-            User user = userService.findUser(username);
+            User user = userService.findByUsername(username);
             if (!userService.checkPassword(user, password)) {
                 model.addAttribute("error", "비밀번호가 올바르지 않습니다.");
                 return "login";
