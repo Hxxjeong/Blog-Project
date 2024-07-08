@@ -49,6 +49,12 @@ public class PostController {
         String username = authentication.getName();
         if(authentication == null || username == null) return "redirect:/loginform";
 
+        if (title == null || title.trim().isEmpty() || content == null || content.trim().isEmpty()) {
+            // 제목 또는 내용이 비어있을 경우 에러 처리
+            model.addAttribute("error", "제목과 내용을 입력해주세요.");
+            return "blog/postform";
+        }
+
         User user = userService.findByUsername(authentication.getName());
         String blogName = user.getBlog().getName();
         model.addAttribute("user", user);

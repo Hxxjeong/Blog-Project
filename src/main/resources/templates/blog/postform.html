@@ -21,7 +21,7 @@
     <div>
         <label for="content">내용</label>
         <div id="editor"></div>
-        <textarea id="content" name="content" style="display:none;"></textarea>
+        <textarea id="content" name="content" style="display:none;" required></textarea>
     </div>
     <div>
         <label for="image">이미지 추가</label>
@@ -59,6 +59,12 @@
     });
 
     document.getElementById('publishPost').addEventListener('click', function () {
+        const content = quill.root.innerHTML.trim();
+        if (!content || content === '<p><br></p>') {
+            alert('내용을 입력하세요.');
+            return;
+        }
+
         document.getElementById('isSecretInput').value = document.getElementById('isSecretCheckbox').checked;
         document.getElementById('isTempInput').value = false;
         document.getElementById('content').value = quill.root.innerHTML;
@@ -66,6 +72,12 @@
     });
 
     document.getElementById('saveDraft').addEventListener('click', function () {
+        const content = quill.root.innerHTML.trim();
+        if (!content || content === '<p><br></p>') {
+            alert('내용을 입력하세요.');
+            return;
+        }
+
         document.getElementById('isSecretInput').value = document.getElementById('isSecretCheckbox').checked;
         document.getElementById('isTempInput').value = true;
         document.getElementById('content').value = quill.root.innerHTML;

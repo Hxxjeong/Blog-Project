@@ -4,11 +4,11 @@ import com.example.blogproject.global.entity.BaseTimeEntity;
 import com.example.blogproject.tag.Tag;
 import com.example.blogproject.user.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,16 +18,17 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@EntityListeners(AuditingEntityListener.class)
 public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
 
+    @NotNull
     @Column(nullable = false)
     private String title;
 
+    @NotNull
     @Lob    // 긴 텍스트 저장
     @Column(nullable = false)
     private String content;

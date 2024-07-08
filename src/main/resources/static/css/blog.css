@@ -128,3 +128,21 @@ main {
     color: #999;
     margin-top: 10px;
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.pagination a {
+    margin: 0 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #000;
+}
+
+.pagination a.active {
+    font-weight: bold;
+}
