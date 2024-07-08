@@ -1,6 +1,6 @@
 package com.example.blogproject.blog;
 
-import com.example.blogproject.user.User;
+import com.example.blogproject.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

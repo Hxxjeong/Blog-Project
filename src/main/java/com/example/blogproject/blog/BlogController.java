@@ -2,8 +2,8 @@ package com.example.blogproject.blog;
 
 import com.example.blogproject.post.Post;
 import com.example.blogproject.post.PostService;
-import com.example.blogproject.user.User;
-import com.example.blogproject.user.UserService;
+import com.example.blogproject.user.entity.User;
+import com.example.blogproject.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +25,7 @@ public class BlogController {
     public String userBlog(@PathVariable("name") String name,
                            @RequestParam(defaultValue = "0") int page,
                            Model model) {
-        User user = userService.findUser(name);
+        User user = userService.findByUsername(name);
         Blog blog = blogService.findBlog(user.getId());
 
         PageRequest pageRequest = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "createAt"));

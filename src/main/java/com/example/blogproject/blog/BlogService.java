@@ -1,7 +1,7 @@
 package com.example.blogproject.blog;
 
-import com.example.blogproject.user.User;
-import com.example.blogproject.user.UserRepository;
+import com.example.blogproject.user.entity.User;
+import com.example.blogproject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +26,7 @@ public class BlogService {
 
     @Transactional
     public Blog findBlog(Long id) {
-        Blog blog = blogRepository.findByUserId(id);
-        if(blog == null) create(id);    // 블로그가 없다면 생성
-        return blog;
+        return blogRepository.findByUserId(id);
     }
 
     // 블로그 이름 수정

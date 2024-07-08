@@ -14,7 +14,8 @@
         <h2>태그 목록</h2>
         <!-- 태그 목록 아이템 -->
         <ul>
-            <li><a href="#">전체 보기 (태그 개수)</a></li>
+            <li>전체 보기 (태그 개수)</a></li>
+            <hr>
             <li><a href="#">예시 태그 (태그 개수)</a></li>
         </ul>
     </aside>
@@ -30,11 +31,12 @@
             <!-- 포스트 목록 표시 공간 -->
             <article class="post" th:each="post: ${posts}">
                 <h3 th:text="${post.title}">제목</h3>
-                <p th:text="${#strings.abbreviate(post.content, 200)}">내용</p>
-                <span class="tag" th:each="tag: ${post.tags}" th:text="${tag.name}">태그</span>
+                <p th:utext="${#strings.abbreviate(post.content != null ? post.content : '', 200)}">내용</p>
+                <!-- 태그가 있을 때만 표시 -->
+                <span class="tag" th:each="tag: ${post.tags}" th:text="${tag.name}" th:if="${post.tags.size() > 0}">태그</span>
                 <span class="info" th:text="${#temporals.format(post.createAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
-<!--                <span class="info" th:text="${post.commentCount + ' 댓글'}">댓글 수</span>-->
-                <span class="info" th:text="${post.likes + ' 좋아요'}">좋아요</span>
+<!--                 <span class="info" th:text="${post.commentCount + ' 댓글'}" th:if="${post.commentCount > 0}">댓글 수</span> -->
+                <span class="info" th:text="${post.likes}">좋아요</span>
                 <span class="info" th:text="${post.isSecret ? '비공개' : '공개'}">공개/비공개 여부</span>
             </article>
         </div>
