@@ -3,10 +3,39 @@
 <head>
     <title>Login</title>
     <link rel="stylesheet" href="css/form.css">
+<!--    <script>-->
+<!--        async function login(event) {-->
+<!--            event.preventDefault();-->
+<!--            const username = document.getElementById('username').value;-->
+<!--            const password = document.getElementById('password').value;-->
+
+<!--            try {-->
+<!--                const response = await fetch('/api/users/login', {-->
+<!--                    method: 'POST',-->
+<!--                    headers: {-->
+<!--                        'Content-Type': 'application/json'-->
+<!--                    },-->
+<!--                    body: JSON.stringify({ username, password })-->
+<!--                });-->
+
+<!--                if (response.ok) {-->
+<!--                    const data = await response.json();-->
+<!--                    localStorage.setItem('accessToken', data.accessToken);-->
+<!--                    window.location.href = '/';-->
+<!--                } else {-->
+<!--                    const error = await response.json();-->
+<!--                    document.getElementById('error').textContent = error.message;-->
+<!--                }-->
+<!--            } catch (error) {-->
+<!--                document.getElementById('error').textContent = '로그인 중 오류가 발생했습니다.';-->
+<!--            }-->
+<!--        }-->
+<!--    </script>-->
 </head>
 <body>
 
 <form th:action="@{/login}" method="post">
+<!--<form onsubmit="login(event)">-->
     <h1>Login</h1>
     <label for="username">ID:</label>
     <input type="text" id="username" name="username" required>
@@ -15,7 +44,7 @@
     <input type="password" id="password" name="password" required>
     <br>
     <button type="submit">Login</button>
-    <p class="error" th:if="${error}" th:text="${error}"></p>
+    <p class="error" th:if="${error}" th:text="'아이디와 비밀번호를 확인해주세요.'"></p>
     <a th:href="@{/userregform}">회원가입</a>
     <a th:href="@{/}">메인으로</a>
 </form>
