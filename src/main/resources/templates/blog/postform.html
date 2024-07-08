@@ -47,7 +47,7 @@
 <script>
     const quill = new Quill('#editor', {
         theme: 'snow',
-        placeholder: '내용을 입력하세요...'
+        placeholder: '내용을 입력하세요.'
     });
 
     document.getElementById('image').addEventListener('change', function (event) {
@@ -58,30 +58,32 @@
         reader.readAsDataURL(event.target.files[0]);
     });
 
-    document.getElementById('publishPost').addEventListener('click', function () {
+    function validateAndSubmitForm(isTemp) {
+        const title = document.getElementById('title').value.trim();
         const content = quill.root.innerHTML.trim();
+
+        if (!title) {
+            alert('제목을 입력하세요.');
+            return;
+        }
+
         if (!content || content === '<p><br></p>') {
             alert('내용을 입력하세요.');
             return;
         }
 
         document.getElementById('isSecretInput').value = document.getElementById('isSecretCheckbox').checked;
-        document.getElementById('isTempInput').value = false;
-        document.getElementById('content').value = quill.root.innerHTML;
+        document.getElementById('isTempInput').value = isTemp;
+        document.getElementById('content').value = content;
         document.getElementById('postForm').submit();
+    }
+
+    document.getElementById('publishPost').addEventListener('click', function () {
+        validateAndSubmitForm(false);
     });
 
     document.getElementById('saveDraft').addEventListener('click', function () {
-        const content = quill.root.innerHTML.trim();
-        if (!content || content === '<p><br></p>') {
-            alert('내용을 입력하세요.');
-            return;
-        }
-
-        document.getElementById('isSecretInput').value = document.getElementById('isSecretCheckbox').checked;
-        document.getElementById('isTempInput').value = true;
-        document.getElementById('content').value = quill.root.innerHTML;
-        document.getElementById('postForm').submit();
+        validateAndSubmitForm(true);
     });
 
     document.getElementById('exit').addEventListener('click', function () {
