@@ -1,6 +1,7 @@
 package com.example.blogproject.post.service;
 
 import com.example.blogproject.blog.BlogService;
+import com.example.blogproject.post.dto.PostUpdateDto;
 import com.example.blogproject.post.entity.Post;
 import com.example.blogproject.post.repository.PostRepository;
 import com.example.blogproject.tag.Tag;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -108,4 +110,24 @@ public class PostService {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("포스트를 찾을 수 없습니다."));
     }
+
+    // 글 수정
+    @Transactional
+    public Post update(Long postId, PostUpdateDto updateDto) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NoSuchElementException("포스트를 찾을 수 없습니다."));
+
+        // 태그 업데이트
+        List<Tag> updateTags = updateDto.getTags().stream()
+                        .map(tagName -> tagRepository.findByName(tagName)
+                                .orElseGet(() -> new Tag(tagName)))
+                        .collect(Collectors.toList());
+
+        post.update(updateDto, updateTags);
+
+        return postRepository.save(post);
+    }
+
+    // 글 삭제
+
 }

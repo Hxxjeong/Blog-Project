@@ -13,8 +13,13 @@
     <h1 th:text="${post.title}">title</h1>
 
     <div class="post-details">
-        <span th:text="${post.user.username}">작성자</span> |
-        <span th:text="${#temporals.format(post.createAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+        <div class="details-left">
+            <span th:text="${post.user.username}">작성자</span> |
+            <span th:text="${#temporals.format(post.createAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+        </div>
+        <div class="details-right">
+            <a th:href="@{'/@' + ${post.user.username} + '/' + ${post.id} + '/edit'}">수정</a>
+        </div>
     </div>
 
     <div class="post-tags">
@@ -25,13 +30,13 @@
 
     <div th:utext="${post.content}">content</div>
 
-    <div class="post-image" th:if="${post.image}">
-        <img th:src="@{'/images/' + ${post.image}}" alt="Post Image">
-    </div>
+<!--    <div class="post-image" th:if="${post.image}">-->
+<!--        <img th:src="@{'/images/' + ${post.image}}" alt="Post Image">-->
+<!--    </div>-->
 </div>
 
 <div class="button-container">
-    <button type="button" onclick="window.history.back();">뒤로가기</button>
+    <a th:href="@{'/@' + ${username}}" class="button">뒤로가기</a>
 </div>
 
 <script type="text/javascript" th:src="@{/js/showProfile.js}"></script>

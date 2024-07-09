@@ -23,9 +23,30 @@ h1 {
 }
 
 .post-details {
+    display: flex;
+    justify-content: space-between;
     font-size: 0.9rem;
     color: #6c757d;
     margin-bottom: 1rem;
+}
+
+.details-left {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.details-right {
+    display: flex;
+}
+
+.details-right a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.details-right a:hover {
+    text-decoration: underline;
 }
 
 .post-tags {
@@ -57,17 +78,19 @@ h1 {
     margin-top: 2rem;
 }
 
-button {
+.button-container a.button {
+    display: inline-block;
     background-color: #007bff;
     color: #fff;
-    border: none;
+    text-decoration: none;
     padding: 0.5rem 1rem;
     font-size: 1rem;
+    text-align: center;
     cursor: pointer;
     border-radius: 4px;
     transition: background-color 0.2s;
 }
 
-button:hover {
+.button-container a.button:hover {
     background-color: #0056b3;
 }

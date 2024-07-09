@@ -1,7 +1,9 @@
 package com.example.blogproject.post.controller;
 
+import com.example.blogproject.post.dto.PostUpdateDto;
 import com.example.blogproject.post.entity.Post;
 import com.example.blogproject.post.service.PostService;
+import com.example.blogproject.tag.Tag;
 import com.example.blogproject.user.entity.User;
 import com.example.blogproject.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -9,14 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -89,5 +89,37 @@ public class PostController {
 
         model.addAttribute("post", post);
         return "blog/postDetail";
+    }
+
+    // 게시글 수정
+    @GetMapping("/@{username}/{postId}/edit")
+    public String update(@PathVariable("username") String username,
+                         @PathVariable("postId") Long postId,
+                         Model model) {
+        Post post = postService.getPostById(postId);
+        PostUpdateDto updateDto = PostUpdateDto.builder()
+                .title(post.getTitle())
+                .content(post.getContent())
+                .isSecret(post.isSecret())
+                .isTemp(post.isTemp())
+                .tags(post.getTags().stream()
+                        .map(Tag::getName)
+                        .collect(Collectors.toList()))
+                .build();
+
+        model.addAttribute("username", username);
+        model.addAttribute("postId", postId);
+        model.addAttribute("postUpdateDTO", updateDto);
+
+        return "blog/postedit";
+    }
+
+    @PostMapping("/@{username}/{postId}/edit")
+    public String update(@PathVariable("username") String username,
+                         @PathVariable("postId") Long postId,
+                         @ModelAttribute PostUpdateDto updateDto) {
+        postService.update(postId, updateDto);
+
+        return "redirect:/@" + username + "/" + postId;
     }
 }

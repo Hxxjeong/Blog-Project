@@ -1,6 +1,7 @@
 package com.example.blogproject.post.entity;
 
 import com.example.blogproject.global.entity.BaseTimeEntity;
+import com.example.blogproject.post.dto.PostUpdateDto;
 import com.example.blogproject.tag.Tag;
 import com.example.blogproject.user.entity.User;
 import jakarta.persistence.*;
@@ -63,5 +64,23 @@ public class Post extends BaseTimeEntity {
         this.isTemp = isTemp;
         this.user = user;
         if(tags != null) this.tags = tags;
+    }
+
+    public void update(PostUpdateDto updateDto, List<Tag> updateTags) {
+        if(updateDto.getTitle() == null || updateDto.getTitle().trim().isEmpty()) {
+            throw new IllegalArgumentException("제목을 입력해주세요.");
+        }
+        if(updateDto.getContent() == null || updateDto.getContent().trim().isEmpty()) {
+            throw new IllegalArgumentException("내용을 입력해주세요.");
+        }
+
+        this.title = updateDto.getTitle();
+        this.content = updateDto.getContent();
+        this.isSecret = updateDto.isSecret();
+        this.isTemp = updateDto.isTemp();
+
+        // 태그 업데이트
+        this.tags.clear();
+        if(updateTags != null) this.tags.addAll(updateTags);
     }
 }
