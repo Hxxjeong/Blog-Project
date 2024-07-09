@@ -7,7 +7,6 @@ import com.example.blogproject.tag.Tag;
 import com.example.blogproject.user.entity.User;
 import com.example.blogproject.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
-@Slf4j
 public class PostController {
     private final PostService postService;
     private final UserService userService;
@@ -30,7 +28,6 @@ public class PostController {
     public String postForm(Authentication authentication, Model model) {
         // 로그인한 사용자인지 확인
         String username = authentication.getName();
-        log.info("username = {}", authentication.getName());
         if (authentication == null || username == null) return "redirect:/loginform";
 
         model.addAttribute("username", authentication.getName());
@@ -79,12 +76,13 @@ public class PostController {
                           Authentication authentication) {
         Post post = postService.getPostById(postId);
 
-        // 로그인한 사용자인지 확인 (비공개글 확인)
-        String loginUsername = authentication != null ? authentication.getName() : null;
-        User currentUser = loginUsername != null ? userService.findByUsername(loginUsername) : null;
+        // 비공개 글 확인
+        if(post.isSecret()) {
+            if(authentication == null) return "redirect:/login";
 
-        if (post.isSecret() && (currentUser == null || !post.getUser().getUsername().equals(loginUsername))) {
-            return "redirect:/";
+            // 로그인한 사용자 확인
+            String loginUsername = authentication.getName();
+            if(!post.getUser().getUsername().equals(loginUsername)) return "redirect:/";    // 권한 없음
         }
 
         model.addAttribute("post", post);
@@ -93,9 +91,9 @@ public class PostController {
 
     // 게시글 수정
     @GetMapping("/@{username}/{postId}/edit")
-    public String update(@PathVariable("username") String username,
-                         @PathVariable("postId") Long postId,
-                         Model model) {
+    public String updateForm (@PathVariable("username") String username,
+                              @PathVariable("postId") Long postId,
+                              Model model) {
         Post post = postService.getPostById(postId);
         PostUpdateDto updateDto = PostUpdateDto.builder()
                 .title(post.getTitle())

@@ -1,5 +1,6 @@
 package com.example.blogproject.post.service;
 
+import com.example.blogproject.blog.Blog;
 import com.example.blogproject.blog.BlogService;
 import com.example.blogproject.post.dto.PostUpdateDto;
 import com.example.blogproject.post.entity.Post;
@@ -35,13 +36,13 @@ public class PostService {
 
     // 글 작성
     @Transactional
-    public Post create(Long userId, String title, String content, MultipartFile image, boolean isSecret, boolean isTemp , List<String> tagNames) {
+    public Post create(Long userId, String title, String content, MultipartFile image, boolean isSecret, boolean isTemp, List<String> tagNames) {
         // 유저 찾기
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("유저를 찾을 수 없습니다."));
 
         // 블로그 찾기
-        blogService.findBlog(userId);
+        Blog blog = blogService.findBlog(userId);
 
         List<Tag> tags = new ArrayList<>();
         for(String tagName: tagNames) {
@@ -50,6 +51,7 @@ public class PostService {
                         // 태그가 없다면 생성
                         Tag newTag = Tag.builder()
                                 .name(tagName.trim())
+                                .blog(blog)
                                 .build();
                         return tagRepository.save(newTag);
                     });
@@ -100,6 +102,7 @@ public class PostService {
     }
 
     // 게시글 전체 조회
+    @Transactional(readOnly = true)
     public Page<Post> getPosts(Long userId, String username, Pageable pageable) {
         return postRepository.findByUserIdAndIsSecretFalseOrUserUsernameOrderByCreateAtDesc(userId, username, pageable);
     }
@@ -117,10 +120,12 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("포스트를 찾을 수 없습니다."));
 
+        Blog blog = blogService.findBlog(post.getUser().getId());
+
         // 태그 업데이트
         List<Tag> updateTags = updateDto.getTags().stream()
-                        .map(tagName -> tagRepository.findByName(tagName)
-                                .orElseGet(() -> new Tag(tagName)))
+                        .map(tagName -> tagRepository.findByNameAndBlog(tagName.trim(), blog)
+                                .orElseGet(() -> new Tag(tagName, blog)))
                         .collect(Collectors.toList());
 
         post.update(updateDto, updateTags);

@@ -9,7 +9,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +17,9 @@ import java.util.List;
 @Table(name = "posts")
 @NoArgsConstructor
 @Getter
-@Setter
 public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
 
     @NotNull
@@ -47,7 +44,7 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "post_tags",
             joinColumns = @JoinColumn(name = "post_id"),
@@ -66,7 +63,7 @@ public class Post extends BaseTimeEntity {
         if(tags != null) this.tags = tags;
     }
 
-    public void update(PostUpdateDto updateDto, List<Tag> updateTags) {
+    public void update(PostUpdateDto updateDto, List<Tag> tags) {
         if(updateDto.getTitle() == null || updateDto.getTitle().trim().isEmpty()) {
             throw new IllegalArgumentException("제목을 입력해주세요.");
         }
@@ -81,6 +78,6 @@ public class Post extends BaseTimeEntity {
 
         // 태그 업데이트
         this.tags.clear();
-        if(updateTags != null) this.tags.addAll(updateTags);
+        this.tags.addAll(tags);
     }
 }

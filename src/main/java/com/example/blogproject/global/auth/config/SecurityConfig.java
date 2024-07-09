@@ -25,7 +25,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/css/**", "/js/**").permitAll()
                         .requestMatchers("/", "/register", "/userregform").permitAll()
-                        .requestMatchers("/@**").permitAll()
+                        .requestMatchers("/@**", "/@{username}/{postId}").permitAll()
                         .anyRequest()
                         .authenticated()
                 )
