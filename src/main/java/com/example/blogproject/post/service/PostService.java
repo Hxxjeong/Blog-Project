@@ -134,5 +134,19 @@ public class PostService {
     }
 
     // 글 삭제
+    public void delete(Long postId, String username) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NoSuchElementException("포스트를 찾을 수 없습니다."));
 
+        if (!post.getUser().getUsername().equals(username))
+            throw new IllegalArgumentException("권한이 없습니다.");
+
+        postRepository.delete(post);
+
+        // 사용하지 않는 태그 삭제
+        List<Tag> tags = post.getTags();
+        for (Tag tag : tags) {
+            if (tag.getPosts().isEmpty()) tagRepository.delete(tag);
+        }
+    }
 }

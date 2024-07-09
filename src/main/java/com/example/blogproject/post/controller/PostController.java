@@ -120,4 +120,13 @@ public class PostController {
 
         return "redirect:/@" + username + "/" + postId;
     }
+
+    // 게시물 삭제
+    @GetMapping("/@{username}/{postId}/delete")
+    public String delete(@PathVariable("username") String username,
+                         @PathVariable("postId") Long postId) {
+        postService.delete(postId, username);
+
+        return "redirect:/@" + username;
+    }
 }
