@@ -1,6 +1,8 @@
-package com.example.blogproject.post;
+package com.example.blogproject.post.service;
 
 import com.example.blogproject.blog.BlogService;
+import com.example.blogproject.post.entity.Post;
+import com.example.blogproject.post.repository.PostRepository;
 import com.example.blogproject.tag.Tag;
 import com.example.blogproject.tag.TagRepository;
 import com.example.blogproject.uploadfile.UploadFile;
@@ -31,7 +33,7 @@ public class PostService {
 
     // 글 작성
     @Transactional
-    public Post create(Long userId, String title, String content, MultipartFile image, boolean isSecret, boolean isTemp ,List<String> tagNames) {
+    public Post create(Long userId, String title, String content, MultipartFile image, boolean isSecret, boolean isTemp , List<String> tagNames) {
         // 유저 찾기
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("유저를 찾을 수 없습니다."));

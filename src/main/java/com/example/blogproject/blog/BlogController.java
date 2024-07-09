@@ -1,7 +1,7 @@
 package com.example.blogproject.blog;
 
-import com.example.blogproject.post.Post;
-import com.example.blogproject.post.PostService;
+import com.example.blogproject.post.entity.Post;
+import com.example.blogproject.post.service.PostService;
 import com.example.blogproject.user.entity.User;
 import com.example.blogproject.user.service.UserService;
 import lombok.RequiredArgsConstructor;

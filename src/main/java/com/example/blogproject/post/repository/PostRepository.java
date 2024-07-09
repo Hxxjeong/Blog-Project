@@ -1,5 +1,6 @@
-package com.example.blogproject.post;
+package com.example.blogproject.post.repository;
 
+import com.example.blogproject.post.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

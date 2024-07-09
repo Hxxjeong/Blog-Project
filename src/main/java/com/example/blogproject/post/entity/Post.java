@@ -1,4 +1,4 @@
-package com.example.blogproject.post;
+package com.example.blogproject.post.entity;
 
 import com.example.blogproject.global.entity.BaseTimeEntity;
 import com.example.blogproject.tag.Tag;

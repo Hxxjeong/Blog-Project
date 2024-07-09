@@ -1,6 +1,6 @@
 package com.example.blogproject.postTag;
 
-import com.example.blogproject.post.Post;
+import com.example.blogproject.post.entity.Post;
 import com.example.blogproject.tag.Tag;
 import jakarta.persistence.*;
 import lombok.Getter;
