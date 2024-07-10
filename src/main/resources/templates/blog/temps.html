@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>임시 글 목록</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/temp.css}">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<h1 class="title">임시 글 목록</h1>
+<br>
+<br>
+
+<div class="post-container" th:if="${posts.totalElements > 0}">
+    <div class="post" th:each="post : ${posts.content}">
+        <h3 th:text="${post.title}">제목</h3>
+        <p th:if="${post.content.length() > 50}" th:text="${post.content.substring(0, 50) + '...'}">내용</p>
+        <p th:unless="${post.content.length() > 50}" th:text="${post.content}">내용</p>
+        <span th:text="${#temporals.format(post.createAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+        <div class="link-container">
+            <a th:href="@{'/@' + ${post.user.username} + '/' + ${post.id} + '/edit'}" class="button">수정</a>
+            <a th:href="@{'/@' + ${post.user.username} + '/' + ${post.id} + '/delete'}" class="button">삭제</a>
+        </div>
+    </div>
+</div>
+
+<div th:if="${posts.totalElements == 0}" class="no-content">
+    <p>임시 저장된 글이 없습니다.</p>
+</div>
+
+<script type="text/javascript" th:src="@{/js/showProfile.js}"></script>
+
+</body>
+</html>

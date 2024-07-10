@@ -8,13 +8,14 @@
 <header th:fragment="header">
     <a th:href="@{/}"><h1>Blog</h1></a>
     <nav>
-        <a class="button" th:href="@{/write}">새 글 작성</a>
         <a sec:authorize="isAnonymous()" th:href="@{/loginform}">Login</a>
         <div sec:authorize="isAuthenticated()" class="profile-container">
+            <a class="button" th:href="@{/write}">새 글 작성</a>
             <img th:src="@{/profile-image.png}" alt="Profile Image" class="profile-icon" onclick="toggleProfileList(this)">
             <ul class="profile-list">
                 <li><a th:href="@{'/@' + ${#authentication.name}}">내 블로그</a></li>
                 <li><a th:href="@{/setting}">내 정보</a></li>
+                <li><a th:href="@{/temps}">임시 글 목록</a></li>
                 <li><a th:href="@{/logout}">Logout</a></li>
             </ul>
         </div>

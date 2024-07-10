@@ -4,14 +4,30 @@ import com.example.blogproject.post.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-    Page<Post> findByUserIdOrderByCreateAtDesc(Long userId, Pageable pageable);   // 페이징 처리
+    // 비공개 & 임시 글 필터링
+    @Query("SELECT p " +
+            "FROM Post p " +
+            "WHERE (p.user.id = :userId OR p.user.username = :username) " +
+            "AND p.isSecret = false " +
+            "AND p.isTemp = false " +
+            "ORDER BY p.createAt DESC")
+    Page<Post> findByUserIdAndIsSecretFalseAndIsTempFalseOrUserUsernameOrderByCreateAtDesc(
+            @Param("userId") Long userId,
+            @Param("username") String username,
+            Pageable pageable
+    );
 
-    // 비공개글 필터링
-    Page<Post> findByUserIdAndIsSecretFalseOrUserUsernameOrderByCreateAtDesc(Long userId, String username, Pageable pageable);
-
-    Post findByUserId(Long userId);
+    // 임시 글 조회
+    @Query("SELECT p " +
+            "FROM Post p " +
+            "WHERE p.user.id = :userId " +
+            "AND p.isTemp = true " +
+            "ORDER BY p.createAt DESC")
+    Page<Post> findByUserIdAndIsTempTrue(@Param("userId") Long userId, Pageable pageable);
 }

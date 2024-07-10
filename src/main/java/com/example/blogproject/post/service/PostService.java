@@ -104,7 +104,7 @@ public class PostService {
     // 게시글 전체 조회
     @Transactional(readOnly = true)
     public Page<Post> getPosts(Long userId, String username, Pageable pageable) {
-        return postRepository.findByUserIdAndIsSecretFalseOrUserUsernameOrderByCreateAtDesc(userId, username, pageable);
+        return postRepository.findByUserIdAndIsSecretFalseAndIsTempFalseOrUserUsernameOrderByCreateAtDesc(userId, username, pageable);
     }
 
     // 게시글 한 개 조회
@@ -148,5 +148,10 @@ public class PostService {
         for (Tag tag : tags) {
             if (tag.getPosts().isEmpty()) tagRepository.delete(tag);
         }
+    }
+
+    // 임시 글 전체 조회
+    public Page<Post> getTemps(Long userId, Pageable pageable) {
+        return postRepository.findByUserIdAndIsTempTrue(userId, pageable);
     }
 }
