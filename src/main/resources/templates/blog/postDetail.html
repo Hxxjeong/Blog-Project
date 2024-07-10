@@ -28,8 +28,7 @@
     </div>
 
     <hr>
-
-    <div th:utext="${post.content}">content</div>
+    <div th:utext="${htmlContent}" class="post-content">content</div>
 
 <!--    <div class="post-image" th:if="${post.image}">-->
 <!--        <img th:src="@{'/images/' + ${post.image}}" alt="Post Image">-->

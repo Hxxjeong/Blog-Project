@@ -28,13 +28,13 @@
             </ul>
         </div>
 
-        <div class="post-list" th:unless="${#lists.isEmpty(posts)}">
+        <div class="post-list" th:if="${posts.totalElements > 0}">
             <!-- 포스트 목록 표시 공간 (클릭 시 상세 페이지로 이동) -->
             <a th:each="post: ${posts}" th:href="@{'/@' + ${user.username} + '/' + ${post.id}}" class="post-link">
                 <article class="post">
                     <h3 th:text="${post.title}">제목</h3>
-                    <p class="post-content" th:utext="${post.content}">내용</p>
-<!--                    <p th:utext="${#strings.abbreviate(post.content != null ? post.content : '', 200)}">내용</p>-->
+                    <p class="post-content" th:if="${plainContents.get(post.id).length() > 50}" th:utext="${plainContents.get(post.id).substring(0, 50) + '...'}">내용</p>
+                    <p class="post-content" th:unless="${plainContents.get(post.id).length() > 50}" th:utext="${plainContents.get(post.id)}">내용</p>
                     <!-- 태그가 있을 때만 표시 -->
                     <span class="tag" th:each="tag: ${post.tags}" th:text="${tag.name}" th:if="${post.tags.size() > 0}">태그</span>
                     <span class="info" th:text="${#temporals.format(post.createAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
@@ -47,7 +47,7 @@
         </div>
 
         <!-- 작성된 포스트가 없는 경우 -->
-        <div th:if="${#lists.isEmpty(posts)}" class="no-posts-message">
+        <div th:if="${posts.totalElements == 0}" class="no-posts-message">
             <p>작성된 포스트가 없습니다.</p>
         </div>
 

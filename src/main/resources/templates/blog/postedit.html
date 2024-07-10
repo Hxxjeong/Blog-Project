@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Post Edit Form</title>
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
     <link rel="stylesheet" th:href="@{/css/form.css}">
     <link rel="stylesheet" th:href="@{/css/postForm.css}">
 </head>
@@ -20,8 +20,7 @@
     </div>
     <div>
         <label for="content">내용</label>
-        <div id="editor" th:utext="${postUpdateDTO.content}"></div>
-        <textarea id="content" name="content" style="display:none;" required></textarea>
+        <textarea id="content" name="content" required th:text="${postUpdateDTO.content}"></textarea>
     </div>
     <div>
         <label for="image">이미지 추가</label>
@@ -43,12 +42,9 @@
     </div>
 </form>
 
-<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 <script>
-    const quill = new Quill('#editor', {
-        theme: 'snow',
-        placeholder: '내용을 입력하세요.'
-    });
+    var simplemde = new SimpleMDE({ element: document.getElementById("content") });
 
     document.getElementById('image').addEventListener('change', function (event) {
         const reader = new FileReader();
@@ -60,21 +56,20 @@
 
     function validateAndSubmitForm(isTemp) {
         const title = document.getElementById('title').value.trim();
-        const content = quill.root.innerHTML.trim();
+        const content = simplemde.value().trim();
 
         if (!title) {
             alert('제목을 입력하세요.');
             return;
         }
 
-        if (!content || content === '<p><br></p>') {
+        if (!content) {
             alert('내용을 입력하세요.');
             return;
         }
 
         document.getElementById('isSecretInput').value = document.getElementById('isSecretCheckbox').checked;
         document.getElementById('isTempInput').value = isTemp;
-        document.getElementById('content').value = content;
         document.getElementById('postForm').submit();
     }
 
@@ -90,8 +85,6 @@
         window.history.back();  // 뒤로 가기
     });
 
-    // Set initial content in Quill editor
-    quill.clipboard.dangerouslyPasteHTML(document.getElementById('editor').getAttribute('th:utext'));
 </script>
 </body>
 </html>

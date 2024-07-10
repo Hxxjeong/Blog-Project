@@ -36,6 +36,10 @@ body {
     justify-content: flex-end;
 }
 
+.link-container a {
+    margin-left: 5px;
+}
+
 .no-content p {
     text-align: center;
     margin: 10px;

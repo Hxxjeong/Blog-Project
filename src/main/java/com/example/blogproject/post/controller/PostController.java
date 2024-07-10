@@ -1,5 +1,6 @@
 package com.example.blogproject.post.controller;
 
+import com.example.blogproject.global.util.MarkdownUtils;
 import com.example.blogproject.post.dto.PostUpdateDto;
 import com.example.blogproject.post.entity.Post;
 import com.example.blogproject.post.service.PostService;
@@ -65,7 +66,7 @@ public class PostController {
         Post post = postService.create(user.getId(), title, content, image, isSecret, isTemp, tagNames);
         model.addAttribute("post", post);
 
-        return "redirect:/@" + blogName;
+        return "redirect:/@" + username;
     }
 
     // 게시물 한 개 조회
@@ -75,6 +76,7 @@ public class PostController {
                           Model model,
                           Authentication authentication) {
         Post post = postService.getPostById(postId);
+        String content = MarkdownUtils.markdownToHtml(post.getContent());
 
         // 비공개 글 확인
         if(post.isSecret()) {
@@ -86,6 +88,7 @@ public class PostController {
         }
 
         model.addAttribute("post", post);
+        model.addAttribute("htmlContent", content);
         return "blog/postDetail";
     }
 
