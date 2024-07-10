@@ -23,10 +23,6 @@ public class UserController {
     private final UserService userService;
     private final BlogService blogService;
 
-    // main
-    @GetMapping("/")
-    public String index() { return "index"; }
-
     @GetMapping("/loginform")
     public String loginForm(HttpServletRequest request, Model model) {
         String errorMessage = (String) request.getAttribute("errorMessage");

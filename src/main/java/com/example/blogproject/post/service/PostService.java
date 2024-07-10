@@ -154,4 +154,9 @@ public class PostService {
     public Page<Post> getTemps(Long userId, Pageable pageable) {
         return postRepository.findByUserIdAndIsTempTrue(userId, pageable);
     }
+
+    // 공개 글 조회
+    public Page<Post> getPublicPosts(Pageable pageable) {
+        return postRepository.findByIsSecretFalseAndIsTempFalseOrderByCreateAtDesc(pageable);
+    }
 }

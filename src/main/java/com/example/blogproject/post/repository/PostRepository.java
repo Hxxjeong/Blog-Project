@@ -30,4 +30,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "AND p.isTemp = true " +
             "ORDER BY p.createAt DESC")
     Page<Post> findByUserIdAndIsTempTrue(@Param("userId") Long userId, Pageable pageable);
+
+    // 공개글 조회 (메인 페이지용)
+    Page<Post> findByIsSecretFalseAndIsTempFalseOrderByCreateAtDesc(Pageable pageable);
 }
