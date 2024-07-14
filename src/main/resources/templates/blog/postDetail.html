@@ -33,6 +33,26 @@
 <!--    <div class="post-image" th:if="${post.image}">-->
 <!--        <img th:src="@{'/images/' + ${post.image}}" alt="Post Image">-->
 <!--    </div>-->
+
+
+    <div class="comment-section">
+        <h2>댓글</h2>
+
+        <div class="comment-list">
+            <div th:each="comment: ${post.comments}" class="comment">
+                <p><strong th:text="${comment.user.username}">작성자</strong></p>
+                <p th:text="${comment.content}">댓글 내용</p>
+                <span th:text="${#temporals.format(comment.createAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+            </div>
+        </div>
+
+        <div class="comment-form" th:if="${#authentication.principal}">
+            <form th:action="@{'/@' + ${username} + '/' + ${post.id} + '/comment'}" method="post">
+                <textarea name="content" rows="4" placeholder="댓글을 작성하세요..." required></textarea>
+                <button type="submit">댓글 작성</button>
+            </form>
+        </div>
+    </div>
 </div>
 
 <div class="button-container">

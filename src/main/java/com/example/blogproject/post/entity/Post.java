@@ -1,5 +1,6 @@
 package com.example.blogproject.post.entity;
 
+import com.example.blogproject.comment.Comment;
 import com.example.blogproject.global.entity.BaseTimeEntity;
 import com.example.blogproject.post.dto.PostUpdateDto;
 import com.example.blogproject.tag.Tag;
@@ -51,6 +52,9 @@ public class Post extends BaseTimeEntity {
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private List<Tag> tags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
 
     @Builder
     public Post(String title, String content, String image, boolean isSecret, boolean isTemp, User user, List<Tag> tags) {

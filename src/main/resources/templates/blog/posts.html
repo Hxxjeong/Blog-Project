@@ -38,7 +38,7 @@
                     <!-- 태그가 있을 때만 표시 -->
                     <span class="tag" th:each="tag: ${post.tags}" th:text="${tag.name}" th:if="${post.tags.size() > 0}">태그</span>
                     <span class="info" th:text="${#temporals.format(post.createAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
-    <!--                 <span class="info" th:text="${post.commentCount + ' 댓글'}" th:if="${post.commentCount > 0}">댓글 수</span> -->
+                    <span class="info" th:text="${post.comments.size() + ' 댓글'}" th:if="${post.comments.size() > 0}">댓글 수</span>
                     <span class="info" th:text="${post.likes}">좋아요</span>
                     <span class="info" th:text="${post.isSecret ? '비공개' : '공개'}">공개/비공개 여부</span>
                 </article>
