@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title th:text="${post.title}">포스트 제목</title>
@@ -30,23 +30,37 @@
     <hr>
     <div th:utext="${htmlContent}" class="post-content">content</div>
 
-<!--    <div class="post-image" th:if="${post.image}">-->
-<!--        <img th:src="@{'/images/' + ${post.image}}" alt="Post Image">-->
-<!--    </div>-->
-
-
     <div class="comment-section">
         <h2>댓글</h2>
 
         <div class="comment-list">
             <div th:each="comment: ${post.comments}" class="comment">
-                <p><strong th:text="${comment.user.username}">작성자</strong></p>
-                <p th:text="${comment.content}">댓글 내용</p>
-                <span th:text="${#temporals.format(comment.createAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+                <div class="comment-header">
+                    <div>
+                        <strong th:text="${comment.user.username}">작성자</strong>
+                        <span th:text="${#temporals.format(comment.createAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+                    </div>
+                    <div class="comment-actions">
+                        <a th:if="${#authentication.principal?.username == comment.user.username}"
+                           href="#" th:onclick="'showEditForm(' + ${comment.id} + ')'" th:attr="data-comment-id=${comment.id}">수정</a>
+                        <a th:if="${#authentication.principal?.username == comment.user.username || #authentication.principal?.username == post.user.username}"
+                           href="#"
+                           th:attr="data-username=${username}, data-post-id=${post.id}, data-comment-id=${comment.id}"
+                           onclick="deleteComment(this.getAttribute('data-username'), this.getAttribute('data-post-id'), this.getAttribute('data-comment-id')); return false;">삭제</a>
+                    </div>
+                </div>
+                <p th:text="${comment.content}" th:id="'comment-content-' + ${comment.id}">댓글 내용</p>
+                <div class="edit-form" th:id="'edit-form-' + ${comment.id}" style="display: none;">
+                    <form class="comment-form" th:action="@{'/@' + ${username} + '/' + ${post.id} + '/comment/' + ${comment.id} + '/edit'}" method="post">
+                        <textarea name="content" rows="4" required th:text="${comment.content}"></textarea>
+                        <button type="submit">수정 완료</button>
+                        <button type="button" th:onclick="'cancelEdit(' + ${comment.id} + ')'" th:attr="data-comment-id=${comment.id}">취소</button>
+                    </form>
+                </div>
             </div>
         </div>
 
-        <div class="comment-form" th:if="${#authentication.principal}">
+        <div class="comment-form" sec:authorize="isAuthenticated()">
             <form th:action="@{'/@' + ${username} + '/' + ${post.id} + '/comment'}" method="post">
                 <textarea name="content" rows="4" placeholder="댓글을 작성하세요..." required></textarea>
                 <button type="submit">댓글 작성</button>
@@ -59,6 +73,27 @@
     <a th:href="@{'/@' + ${username}}" class="button">뒤로가기</a>
 </div>
 
+<script type="text/javascript">
+    function showEditForm(commentId) {
+        document.getElementById('comment-content-' + commentId).style.display = 'none';
+        document.getElementById('edit-form-' + commentId).style.display = 'block';
+    }
+
+    function cancelEdit(commentId) {
+        document.getElementById('comment-content-' + commentId).style.display = 'block';
+        document.getElementById('edit-form-' + commentId).style.display = 'none';
+    }
+
+    function deleteComment(username, postId, commentId) {
+        if (confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/@' + username + '/' + postId + '/comment/' + commentId + '/delete';
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>
 <script type="text/javascript" th:src="@{/js/showProfile.js}"></script>
 
 </body>

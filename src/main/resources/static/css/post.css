@@ -145,3 +145,24 @@ h1 {
 .comment-form button:hover {
     background-color: #00B886;
 }
+
+.edit-form { display: none; }
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.comment-actions {
+    display: flex;
+    gap: 10px;
+}
+.comment-actions a {
+    color: #12B886;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+.comment-actions a:hover {
+    text-decoration: underline;
+}

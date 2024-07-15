@@ -34,4 +34,11 @@ public class Comment extends BaseTimeEntity {
         this.post = post;
         this.user = user;
     }
+
+    public void updateComment(String newContent) {
+        if(newContent == null || newContent.trim().isEmpty()) {
+            throw new IllegalArgumentException("댓글을 입력해주세요.");
+        }
+        this.content = newContent;
+    }
 }
