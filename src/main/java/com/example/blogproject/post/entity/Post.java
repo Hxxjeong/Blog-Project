@@ -33,7 +33,7 @@ public class Post extends BaseTimeEntity {
     private String content;
 
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private UploadFile image; // Change from String to UploadFile
+    private UploadFile image;
 
     private Integer likes;
 
@@ -69,21 +69,30 @@ public class Post extends BaseTimeEntity {
         if(tags != null) this.tags = tags;
     }
 
-    public void update(PostUpdateDto updateDto, List<Tag> tags) {
-        if(updateDto.getTitle() == null || updateDto.getTitle().trim().isEmpty()) {
-            throw new IllegalArgumentException("제목을 입력해주세요.");
-        }
-        if(updateDto.getContent() == null || updateDto.getContent().trim().isEmpty()) {
-            throw new IllegalArgumentException("내용을 입력해주세요.");
-        }
-
-        this.title = updateDto.getTitle();
-        this.content = updateDto.getContent();
-        this.isSecret = updateDto.isSecret();
-        this.isTemp = updateDto.isTemp();
-
-        // 태그 업데이트
+    // 글 수정
+    public void update(String title, String content, boolean isSecret, boolean isTemp, List<Tag> tags) {
+        this.title = title;
+        this.content = content;
+        this.isSecret = isSecret;
+        this.isTemp = isTemp;
         this.tags.clear();
         this.tags.addAll(tags);
+    }
+
+    public void setImage(UploadFile image) {
+        if (this.image != null) {
+            this.image.setPost(null);
+        }
+        this.image = image;
+        if (image != null) {
+            image.setPost(this);
+        }
+    }
+
+    public void removeImage() {
+        if (this.image != null) {
+            this.image.setPost(null);
+            this.image = null;
+        }
     }
 }

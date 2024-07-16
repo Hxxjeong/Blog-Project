@@ -61,7 +61,7 @@ img {
 }
 
 .button:hover {
-    background-color: #5fb297;
+    background-color: #00b886;
 }
 
 .button-container {
@@ -77,4 +77,18 @@ img {
 
 .checkbox-container input {
     margin-right: 5px;
+}
+
+#removeThumbnail {
+    background-color: #12B886;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin: 10px;
+}
+
+#removeThumbnail:hover {
+    background-color: #00b886;
 }

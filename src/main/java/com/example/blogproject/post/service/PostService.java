@@ -21,9 +21,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,7 +94,7 @@ public class PostService {
     @Transactional
     public UploadFile saveImage(MultipartFile image, User user) throws IOException {
         String originName = image.getOriginalFilename();
-        String storedName = System.currentTimeMillis() + "_" + originName;
+        String storedName = UUID.randomUUID() + "_" + originName;
 
         UploadFile uploadFile = UploadFile.builder()
                 .originName(originName)
@@ -123,21 +126,56 @@ public class PostService {
 
     // 글 수정
     @Transactional
-    public Post update(Long postId, PostUpdateDto updateDto) {
+    public Post update(Long postId, PostUpdateDto updateDto) throws IOException {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("포스트를 찾을 수 없습니다."));
 
         Blog blog = blogService.findBlog(post.getUser().getId());
 
-        // 태그 업데이트
         List<Tag> updateTags = updateDto.getTags().stream()
-                        .map(tagName -> tagRepository.findByNameAndBlog(tagName.trim(), blog)
-                                .orElseGet(() -> new Tag(tagName, blog)))
-                        .collect(Collectors.toList());
+                .map(tagName -> tagRepository.findByNameAndBlog(tagName.trim(), blog)
+                        .orElseGet(() -> new Tag(tagName, blog)))
+                .collect(Collectors.toList());
 
-        post.update(updateDto, updateTags);
+        // 이미지 처리
+        if (updateDto.isRemoveImage()) deleteImage(post);
+        else if (updateDto.getImage() != null && !updateDto.getImage().isEmpty())
+            updateImage(post, updateDto.getImage());
+
+        post.update(updateDto.getTitle(), updateDto.getContent(), updateDto.isSecret(), updateDto.isTemp(), updateTags);
 
         return postRepository.save(post);
+    }
+
+    @Transactional
+    public void deleteImage(Post post) {
+        if (post.getImage() != null) {
+            String filePath = uploadDir + post.getImage().getStoredName();
+            try {
+                Files.deleteIfExists(Paths.get(filePath));
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            uploadFileRepository.delete(post.getImage());
+            post.removeImage();
+        }
+    }
+
+    @Transactional
+    public void updateImage(Post post, MultipartFile newImageFile) throws IOException {
+        // 기존 이미지 삭제
+        if (post.getImage() != null) {
+            UploadFile oldImage = post.getImage();
+            post.setImage(null);
+            uploadFileRepository.delete(oldImage);
+        }
+
+        // 새 이미지 저장
+        UploadFile newImage = saveImage(newImageFile, post.getUser());
+        post.setImage(newImage);
+        newImage.setPost(post);
+        uploadFileRepository.save(newImage);
     }
 
     // 글 삭제

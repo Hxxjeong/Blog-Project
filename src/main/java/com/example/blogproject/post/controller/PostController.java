@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -111,6 +112,7 @@ public class PostController {
         model.addAttribute("username", username);
         model.addAttribute("postId", postId);
         model.addAttribute("postUpdateDTO", updateDto);
+        model.addAttribute("currentImage", post.getImage()); // 현재 이미지 정보
 
         return "blog/postedit";
     }
@@ -118,7 +120,7 @@ public class PostController {
     @PostMapping("/@{username}/{postId}/edit")
     public String update(@PathVariable("username") String username,
                          @PathVariable("postId") Long postId,
-                         @ModelAttribute PostUpdateDto updateDto) {
+                         @ModelAttribute PostUpdateDto updateDto) throws IOException {
         postService.update(postId, updateDto);
 
         return "redirect:/@" + username + "/" + postId;

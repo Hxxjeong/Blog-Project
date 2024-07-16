@@ -25,8 +25,8 @@ public class UploadFile extends BaseTimeEntity {
     @Column(name = "stored_name", unique = true, nullable = false)
     private String storedName;
 
-    @OneToOne
-    @JoinColumn(name = "post_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", unique = true)
     private Post post;
 
     @ManyToOne
