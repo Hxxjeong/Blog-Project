@@ -31,10 +31,6 @@
     <hr>
     <div th:utext="${htmlContent}" class="post-content">content</div>
 
-    <div class="post-image" th:if="${post.image}">
-        <img th:src="@{'/images/' + ${post.image}}" alt="Post Image">
-    </div>
-
     <div class="comment-section">
         <h2>댓글</h2>
 

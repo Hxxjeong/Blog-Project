@@ -16,3 +16,6 @@ spring:
 jwt:
   secretKey: ${secretKey}
   refreshKey: ${refreshKey}
+
+file:
+  upload-dir: /Users/hj/temp/upload/

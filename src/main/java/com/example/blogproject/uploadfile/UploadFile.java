@@ -21,10 +21,11 @@ public class UploadFile extends BaseTimeEntity {
 
     @Column(name = "origin_name", nullable = false)
     private String originName;
+
     @Column(name = "stored_name", unique = true, nullable = false)
     private String storedName;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "post_id")
     private Post post;
 

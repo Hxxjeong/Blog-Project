@@ -12,6 +12,7 @@ import com.example.blogproject.uploadfile.UploadFileRepository;
 import com.example.blogproject.user.entity.User;
 import com.example.blogproject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,9 @@ public class PostService {
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
     private final UploadFileRepository uploadFileRepository;
+
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
     // 글 작성
     @Transactional
@@ -84,11 +88,10 @@ public class PostService {
         return savedPost;
     }
 
-    // 파일 저장
     @Transactional
     public UploadFile saveImage(MultipartFile image, User user) throws IOException {
         String originName = image.getOriginalFilename();
-        String storedName = System.currentTimeMillis() + "_" + originName;  // 유니크한 이름 지정
+        String storedName = System.currentTimeMillis() + "_" + originName;
 
         UploadFile uploadFile = UploadFile.builder()
                 .originName(originName)
@@ -96,7 +99,12 @@ public class PostService {
                 .user(user)
                 .build();
 
-        File destination = new File("src/main/resources/static/img" + storedName);
+        File destinationDir = new File(uploadDir);
+        // 디렉토리가 없다면 생성
+        if (!destinationDir.exists()) {
+            destinationDir.mkdirs();
+        }
+        File destination = new File(destinationDir, storedName);
         image.transferTo(destination);
 
         return uploadFile;
