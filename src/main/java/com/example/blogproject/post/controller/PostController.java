@@ -56,7 +56,7 @@ public class PostController {
         }
 
         User user = userService.findByUsername(authentication.getName());
-        String blogName = user.getBlog().getName();
+//        String blogName = user.getBlog().getName();
         model.addAttribute("user", user);
 
         // 태그 쉼표로 구분
@@ -125,7 +125,7 @@ public class PostController {
     }
 
     // 게시물 삭제
-    @GetMapping("/@{username}/{postId}/delete")
+    @PostMapping("/@{username}/{postId}/delete")
     public String delete(@PathVariable("username") String username,
                          @PathVariable("postId") Long postId) {
         postService.delete(postId, username);
