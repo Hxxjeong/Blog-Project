@@ -157,25 +157,44 @@ public class PostService {
             catch (IOException e) {
                 e.printStackTrace();
             }
-            uploadFileRepository.delete(post.getImage());
             post.removeImage();
         }
     }
 
     @Transactional
     public void updateImage(Post post, MultipartFile newImageFile) throws IOException {
-        // 기존 이미지 삭제
-        if (post.getImage() != null) {
-            UploadFile oldImage = post.getImage();
-            post.setImage(null);
-            uploadFileRepository.delete(oldImage);
+        UploadFile image = post.getImage();
+
+        String originName = newImageFile.getOriginalFilename();
+        String storedName = UUID.randomUUID() + "_" + originName;
+
+        // 기존 이미지 파일 삭제
+        if (image != null) {
+            String filePath = uploadDir + image.getStoredName();
+
+            try {
+                Files.deleteIfExists(Paths.get(filePath));
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            image.setOriginName(originName);
+            image.setStoredName(storedName);
+        }
+        else {
+            image = saveImage(newImageFile, post.getUser());
+            post.setImage(image);
         }
 
-        // 새 이미지 저장
-        UploadFile newImage = saveImage(newImageFile, post.getUser());
-        post.setImage(newImage);
-        newImage.setPost(post);
-        uploadFileRepository.save(newImage);
+        // 새로운 이미지 파일 저장
+        File destinationDir = new File(uploadDir);
+        if (!destinationDir.exists()) destinationDir.mkdirs();  // 디렉토리가 없으면 생성
+
+        File destination = new File(destinationDir, storedName);
+        newImageFile.transferTo(destination);
+
+        uploadFileRepository.save(image);
     }
 
     // 글 삭제

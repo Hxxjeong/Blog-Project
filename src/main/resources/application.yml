@@ -18,4 +18,4 @@ jwt:
   refreshKey: ${refreshKey}
 
 file:
-  upload-dir: /Users/hj/temp/upload/
+  upload-dir: ${directory}
