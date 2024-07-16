@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PostService {
     private final PostRepository postRepository;
     private final BlogService blogService;
@@ -95,20 +96,18 @@ public class PostService {
                 .user(user)
                 .build();
 
-        File destination = new File("/c/Techit/image/" + storedName);
+        File destination = new File("src/main/resources/static/img" + storedName);
         image.transferTo(destination);
 
         return uploadFile;
     }
 
     // 게시글 전체 조회
-    @Transactional(readOnly = true)
     public Page<Post> getPosts(Long userId, String username, Pageable pageable) {
         return postRepository.findByUserIdAndIsSecretFalseAndIsTempFalseOrUserUsernameOrderByCreateAtDesc(userId, username, pageable);
     }
 
     // 게시글 한 개 조회
-    @Transactional(readOnly = true)
     public Post getPostById(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("포스트를 찾을 수 없습니다."));
@@ -134,6 +133,7 @@ public class PostService {
     }
 
     // 글 삭제
+    @Transactional
     public void delete(Long postId, String username) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NoSuchElementException("포스트를 찾을 수 없습니다."));
