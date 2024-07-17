@@ -33,4 +33,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     // 공개글 조회 (메인 페이지용)
     Page<Post> findByIsSecretFalseAndIsTempFalseOrderByCreateAtDesc(Pageable pageable);
+
+    // 공개글 좋아요 순으로 조회
+    Page<Post> findByIsSecretFalseAndIsTempFalseOrderByLikesDesc(Pageable pageable);
 }

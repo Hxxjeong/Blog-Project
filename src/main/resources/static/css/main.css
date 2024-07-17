@@ -32,6 +32,14 @@ main {
     width: calc(25% - 20px);
     display: flex;
     flex-direction: column;
+    position: relative;
+}
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
 }
 
 .post-image {
@@ -65,7 +73,7 @@ main {
 
 .read-more {
     display: inline-block;
-    margin-top: 10px;
+    margin-top: 0;
     padding: 10px 20px;
     background-color: #12B886;
     color: #fff;
@@ -77,6 +85,11 @@ main {
 
 .read-more:hover {
     background-color: #00b886;
+}
+
+.likes-count {
+    color: #666;
+    font-size: 0.9em;
 }
 
 .pagination {
@@ -101,4 +114,27 @@ main {
 
 .pagination strong {
     background-color: #333;
+}
+
+/* Sorting tabs */
+.sorting-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.sorting-tabs .tab {
+    margin: 0 10px;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    color: #333;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.sorting-tabs .tab.active,
+.sorting-tabs .tab:hover {
+    background-color: #12B886;
+    color: #fff;
 }

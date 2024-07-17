@@ -146,4 +146,9 @@ public class PostService {
     public Page<Post> getPublicPosts(Pageable pageable) {
         return postRepository.findByIsSecretFalseAndIsTempFalseOrderByCreateAtDesc(pageable);
     }
+
+    // 공개 글 좋아요 순으로 조회
+    public Page<Post> getPublicPostsSortedByLikes(Pageable pageable) {
+        return postRepository.findByIsSecretFalseAndIsTempFalseOrderByLikesDesc(pageable);
+    }
 }

@@ -10,6 +10,12 @@
 <div th:replace="fragments/header :: header"></div>
 
 <main>
+    <!-- Sorting tabs -->
+    <div class="sorting-tabs">
+        <a th:href="@{/?sort=latest}" th:classappend="${sort == 'latest'} ? 'active'" class="tab">최신</a>
+        <a th:href="@{/?sort=trend}" th:classappend="${sort == 'trend'} ? 'active'" class="tab">트랜드</a>
+    </div>
+
     <div class="post-list" th:if="${posts.size() <= 0}">
         <p>글을 작성한 유저가 없습니다. 글을 작성해 보세요!</p>
     </div>
@@ -24,17 +30,20 @@
                 <span th:text="${#temporals.format(post.createAt, 'yyyy년 MM월 dd일')}">작성일</span>
                 <span th:text="${post.user.username}">작성자</span>
             </div>
-            <a th:href="@{'/@' + ${post.user.username} + '/' + ${post.id}}" class="read-more">읽기</a>
+            <div class="post-actions">
+                <a th:href="@{'/@' + ${post.user.username} + '/' + ${post.id}}" class="read-more">읽기</a>
+                <span class="likes-count" th:text="${post.likes.size()} + ' 좋아요'"></span>
+            </div>
         </div>
     </div>
 
     <div class="pagination" th:if="${posts != null and totalPages > 0}">
-        <a th:if="${hasPrevious}" th:href="@{/(page=${currentPage - 1})}">&laquo; 이전</a>
+        <a th:if="${hasPrevious}" th:href="@{/(page=${currentPage - 1}, sort=${sort})}">&laquo; 이전</a>
         <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-            <a th:if="${i != currentPage}" th:href="@{/(page=${i})}" th:text="${i + 1}"></a>
+            <a th:if="${i != currentPage}" th:href="@{/(page=${i}, sort=${sort})}" th:text="${i + 1}"></a>
             <strong th:if="${i == currentPage}" th:text="${i + 1}"></strong>
         </span>
-        <a th:if="${hasNext}" th:href="@{/(page=${currentPage + 1})}">다음 &raquo;</a>
+        <a th:if="${hasNext}" th:href="@{/(page=${currentPage + 1}, sort=${sort})}">다음 &raquo;</a>
     </div>
 </main>
 
