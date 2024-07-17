@@ -23,7 +23,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())   // csrf 토큰 해제
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/css/**", "/js/**").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/img/**", "/images/**").permitAll()
                         .requestMatchers("/", "/register", "/userregform").permitAll()
                         .requestMatchers("/@**", "/@{username}/{postId}").permitAll()
                         .anyRequest()
