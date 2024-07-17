@@ -154,15 +154,45 @@ h1 {
     align-items: center;
     margin-bottom: 5px;
 }
+
 .comment-actions {
     display: flex;
     gap: 10px;
 }
+
 .comment-actions a {
     color: #12B886;
     text-decoration: none;
     font-size: 0.9em;
 }
+
 .comment-actions a:hover {
     text-decoration: underline;
+}
+
+/* 좋아요 버튼 및 카운트 스타일 */
+.like-section {
+    position: fixed;
+    left: 0;
+    top: 20%;
+    transform: translateY(-50%);
+    background-color: #dddddd;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.like-button img {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.like-count {
+    margin-top: 5px;
+    font-size: 0.9rem;
+    color: #6c757d;
 }

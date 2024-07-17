@@ -2,6 +2,7 @@ package com.example.blogproject.post.entity;
 
 import com.example.blogproject.comment.Comment;
 import com.example.blogproject.global.entity.BaseTimeEntity;
+import com.example.blogproject.likes.Likes;
 import com.example.blogproject.tag.Tag;
 import com.example.blogproject.uploadfile.UploadFile;
 import com.example.blogproject.user.entity.User;
@@ -34,8 +35,6 @@ public class Post extends BaseTimeEntity {
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private UploadFile image;
 
-    private Integer likes;
-
     @Column(nullable = false)
     private boolean isSecret;
 
@@ -56,6 +55,9 @@ public class Post extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Likes> likes = new ArrayList<>();
 
     @Builder
     public Post(String title, String content, UploadFile image, boolean isSecret, boolean isTemp, User user, List<Tag> tags) {

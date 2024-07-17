@@ -1,12 +1,14 @@
 package com.example.blogproject.post.controller;
 
 import com.example.blogproject.global.util.MarkdownUtils;
+import com.example.blogproject.likes.LikesService;
 import com.example.blogproject.post.dto.PostUpdateDto;
 import com.example.blogproject.post.entity.Post;
 import com.example.blogproject.post.service.PostService;
 import com.example.blogproject.tag.Tag;
 import com.example.blogproject.user.entity.User;
 import com.example.blogproject.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 public class PostController {
     private final PostService postService;
     private final UserService userService;
+    private final LikesService likesService;
 
     // 포스트 작성
     @GetMapping("/write")
@@ -57,7 +60,6 @@ public class PostController {
         }
 
         User user = userService.findByUsername(authentication.getName());
-//        String blogName = user.getBlog().getName();
         model.addAttribute("user", user);
 
         // 태그 쉼표로 구분
@@ -81,15 +83,21 @@ public class PostController {
 
         // 비공개 글 확인
         if(post.isSecret()) {
-            if(authentication == null) return "redirect:/login";
+            if(authentication == null) return "redirect:/";
 
             // 로그인한 사용자 확인
             String loginUsername = authentication.getName();
             if(!post.getUser().getUsername().equals(loginUsername)) return "redirect:/";    // 권한 없음
         }
 
+        boolean isLiked = false;
+        if (authentication != null) {
+            isLiked = likesService.isPostLikedByUser(post, authentication.getName());
+        }
+
         model.addAttribute("post", post);
         model.addAttribute("htmlContent", content);
+        model.addAttribute("isLiked", isLiked);
         return "blog/postDetail";
     }
 
@@ -97,8 +105,14 @@ public class PostController {
     @GetMapping("/@{username}/{postId}/edit")
     public String updateForm (@PathVariable("username") String username,
                               @PathVariable("postId") Long postId,
+                              Authentication authentication,
                               Model model) {
+        // 로그인한 사용자 확인
         Post post = postService.getPostById(postId);
+
+        String loginUser = authentication.getName();
+        if(!post.getUser().getUsername().equals(loginUser)) return "redirect:/";
+
         PostUpdateDto updateDto = PostUpdateDto.builder()
                 .title(post.getTitle())
                 .content(post.getContent())
@@ -120,7 +134,13 @@ public class PostController {
     @PostMapping("/@{username}/{postId}/edit")
     public String update(@PathVariable("username") String username,
                          @PathVariable("postId") Long postId,
-                         @ModelAttribute PostUpdateDto updateDto) throws IOException {
+                         @ModelAttribute PostUpdateDto updateDto,
+                         Authentication authentication) throws IOException {
+        Post post = postService.getPostById(postId);
+
+        String loginUser = authentication.getName();
+        if(!post.getUser().getUsername().equals(loginUser)) return "redirect:/";
+
         postService.update(postId, updateDto);
 
         return "redirect:/@" + username + "/" + postId;
@@ -129,7 +149,13 @@ public class PostController {
     // 게시물 삭제
     @PostMapping("/@{username}/{postId}/delete")
     public String delete(@PathVariable("username") String username,
-                         @PathVariable("postId") Long postId) {
+                         @PathVariable("postId") Long postId,
+                         Authentication authentication) {
+        Post post = postService.getPostById(postId);
+
+        String loginUser = authentication.getName();
+        if(!post.getUser().getUsername().equals(loginUser)) return "redirect:/";
+
         postService.delete(postId, username);
 
         return "redirect:/@" + username;

@@ -149,6 +149,13 @@ main {
     margin-top: 10px;
 }
 
+.info-comment, .info-like {
+    display: inline-block;
+    font-size: 12px;
+    color: #999;
+    margin-top: 10px;
+}
+
 .pagination {
     display: flex;
     justify-content: center;

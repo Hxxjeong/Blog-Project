@@ -31,6 +31,14 @@
     <hr>
     <div th:utext="${htmlContent}" class="post-content">content</div>
 
+    <div class="like-section" th:if="${#authentication.principal != null && post.user.username != #authentication.principal.username}">
+        <a th:href="@{'/@' + ${post.user.username} + '/' + ${post.id} + '/like'}" class="like-button">
+            <img th:src="@{/img/liked.png}" th:if="${isLiked}" alt="좋아요">
+            <img th:src="@{/img/default-like.png}" th:unless="${isLiked}" alt="좋아요 취소">
+        </a>
+        <span class="like-count" th:text="'좋아요 ' + ${post.likes.size()} + '개'">좋아요 개수</span>
+    </div>
+
     <div class="comment-section">
         <h2>댓글</h2>
 
@@ -75,6 +83,18 @@
 </div>
 
 <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        var postContainer = document.querySelector('.post-container');
+        var likeSection = document.querySelector('.like-section');
+
+        if (postContainer && likeSection) {
+            var postContainerRect = postContainer.getBoundingClientRect();
+            var likeSectionOffset = 20; // .post-container와의 간격 (픽셀 단위)
+
+            likeSection.style.left = (postContainerRect.left - likeSectionOffset - likeSection.offsetWidth) + 'px';
+        }
+    });
+
     function showEditForm(commentId) {
         document.getElementById('comment-content-' + commentId).style.display = 'none';
         document.getElementById('edit-form-' + commentId).style.display = 'block';

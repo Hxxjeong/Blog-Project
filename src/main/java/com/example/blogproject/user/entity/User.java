@@ -1,6 +1,7 @@
 package com.example.blogproject.user.entity;
 
 import com.example.blogproject.blog.Blog;
+import com.example.blogproject.likes.Likes;
 import com.example.blogproject.role.Role;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -11,7 +12,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -40,6 +43,9 @@ public class User {
     @CreatedDate
     @Column(name = "registration_date") // 가입 날짜
     private LocalDateTime date;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Likes> likes = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
