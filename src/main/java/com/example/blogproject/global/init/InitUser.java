@@ -31,32 +31,33 @@ public class InitUser implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         String hashedPassword = passwordEncoder.encode(adminPassword);
 
-        Role user = Role.builder()
-                .name("USER")
-                .build();
+        // user와 admin 권한이 없으면 생성
+        roleRepository.findByName("USER").orElseGet(() -> {
+            Role role = new Role("USER");
+            return roleRepository.save(role);
+        });
 
-        Role admin = Role.builder()
-                .name("ADMIN")
-                .build();
-
-        roleRepository.save(user);
-        roleRepository.save(admin);
+        Role admin = roleRepository.findByName("ADMIN").orElseGet(() -> {
+            Role role = new Role("ADMIN");
+            return roleRepository.save(role);
+        });
 
         // 관리자 유저
-        Role adminRole = roleRepository.findByName("ADMIN").get();
+        User adminUser = userRepository.findByUsername("admin").orElseGet(() -> {
+            User userAdmin = User.builder()
+                    .username("admin")
+                    .password(hashedPassword)
+                    .name("admin")
+                    .email("admin@blog.com")
+                    .build();
 
-        // 관리자 계정 생성
-        User adminUser = User.builder()
-                .username("admin")
-                .password(hashedPassword)
-                .name("admin")
-                .email("admin@blog.com")
-                .build();
+            userAdmin.getRoles().add(admin);    // 관리자
 
-        adminUser.getRoles().add(adminRole);    // 관리자
+            return userRepository.save(userAdmin);
+        });
 
-        userRepository.save(adminUser);
-
-        blogService.create(adminUser.getId());
+        // 필요시 블로그 생성
+        if (adminUser.getBlog() == null)
+            blogService.create(adminUser.getId());
     }
 }
