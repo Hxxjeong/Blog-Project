@@ -87,7 +87,7 @@ public class PostService {
 
     // 게시글 전체 조회
     public Page<Post> getPosts(Long userId, String username, Pageable pageable) {
-        return postRepository.findByUserIdAndIsSecretFalseAndIsTempFalseOrUserUsernameOrderByCreateAtDesc(userId, username, pageable);
+        return postRepository.findByUserIdOrUserUsernameAndIsTempFalseOrderByCreateAtDesc(userId, username, pageable);
     }
 
     // 게시글 한 개 조회

@@ -10,14 +10,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-    // 비공개 & 임시 글 필터링
+    // 임시 글 필터링 (개인 블로그용)
     @Query("SELECT p " +
             "FROM Post p " +
             "WHERE (p.user.id = :userId OR p.user.username = :username) " +
-            "AND p.isSecret = false " +
             "AND p.isTemp = false " +
             "ORDER BY p.createAt DESC")
-    Page<Post> findByUserIdAndIsSecretFalseAndIsTempFalseOrUserUsernameOrderByCreateAtDesc(
+    Page<Post> findByUserIdOrUserUsernameAndIsTempFalseOrderByCreateAtDesc(
             @Param("userId") Long userId,
             @Param("username") String username,
             Pageable pageable
