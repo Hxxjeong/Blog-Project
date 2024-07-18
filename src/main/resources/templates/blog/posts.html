@@ -14,9 +14,14 @@
         <h2>태그 목록</h2>
         <!-- 태그 목록 아이템 -->
         <ul>
-            <li>전체 보기 (태그 개수)</a></li>
-            <hr>
-            <li><a href="#">예시 태그 (태그 개수)</a></li>
+            <li th:each="entry : ${tagCounts}">
+                <a th:href="${entry.key == '전체 보기' ? '@' + user.username : '@' + user.username + '?tag=' + entry.key}"
+                   th:class="${selectedTag == null and selectedTag != '' and entry.key == '전체 보기' ? 'active' :
+                     (selectedTag != null and selectedTag == entry.key ? 'active' : '')}">
+                    <span th:text="${entry.key}"></span>
+                    (<span th:text="${entry.value}"></span>)
+                </a>
+            </li>
         </ul>
     </aside>
     <section class="post-section">
@@ -29,7 +34,6 @@
         </div>
 
         <div class="post-list" th:if="${posts.totalElements > 0}">
-            <!-- 포스트 목록 표시 공간 (클릭 시 상세 페이지로 이동) -->
             <a th:each="post: ${posts}" th:href="@{'/@' + ${user.username} + '/' + ${post.id}}" class="post-link">
                 <article class="post">
                     <div class="post-content-wrapper">
@@ -61,15 +65,15 @@
         <!-- 페이징 처리 -->
         <div class="pagination" th:if="${posts != null and posts.totalPages > 0}">
             <span th:if="${posts.hasPrevious()}">
-                <a th:href="@{'/@' + ${blog.name}(page=${posts.number - 1})}">이전</a>
+                <a th:href="@{'/@' + ${user.username}(page=${posts.number - 1})}">이전</a>
             </span>
             <span th:each="pageNumber : ${#numbers.sequence(0, posts.totalPages - 1)}">
-                <a th:href="@{'/@' + ${blog.name}(page=${pageNumber})}"
+                <a th:href="@{'/@' + ${user.username}(page=${pageNumber})}"
                    th:text="${pageNumber + 1}"
                    th:class="${pageNumber == posts.number} ? active"></a>
             </span>
             <span th:if="${posts.hasNext()}">
-                <a th:href="@{'/@' + ${blog.name}(page=${posts.number + 1})}">다음</a>
+                <a th:href="@{'/@' + ${user.username}(page=${posts.number + 1})}">다음</a>
             </span>
         </div>
     </section>

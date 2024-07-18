@@ -5,8 +5,8 @@ import com.example.blogproject.blog.BlogService;
 import com.example.blogproject.post.dto.PostUpdateDto;
 import com.example.blogproject.post.entity.Post;
 import com.example.blogproject.post.repository.PostRepository;
-import com.example.blogproject.tag.Tag;
-import com.example.blogproject.tag.TagRepository;
+import com.example.blogproject.tag.entity.Tag;
+import com.example.blogproject.tag.repository.TagRepository;
 import com.example.blogproject.uploadfile.UploadFile;
 import com.example.blogproject.uploadfile.UploadFileRepository;
 import com.example.blogproject.uploadfile.UploadFileService;
@@ -20,9 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,19 +44,25 @@ public class PostService {
         // 블로그 찾기
         Blog blog = blogService.findBlog(userId);
 
-        List<Tag> tags = new ArrayList<>();
-        for(String tagName: tagNames) {
-            Tag tag = tagRepository.findByName(tagName.trim())
-                    .orElseGet(() -> {
-                        // 태그가 없다면 생성
-                        Tag newTag = Tag.builder()
-                                .name(tagName.trim())
-                                .blog(blog)
-                                .build();
-                        return tagRepository.save(newTag);
-                    });
-            tags.add(tag);
+        Set<String> uniqueTagNames = new HashSet<>();
+        for (String tagName: tagNames) {
+            String trimmedTagName = tagName.trim();
+            if (!trimmedTagName.isEmpty()) {
+                uniqueTagNames.add(trimmedTagName);
+            }
         }
+
+        List<Tag> tags = uniqueTagNames.stream()
+                .map(tagName -> tagRepository.findByNameAndBlog(tagName, blog)
+                        .orElseGet(() -> {
+                            // 태그가 없다면 생성
+                            Tag newTag = Tag.builder()
+                                    .name(tagName)
+                                    .blog(blog)
+                                    .build();
+                            return tagRepository.save(newTag);
+                        }))
+                .collect(Collectors.toList());  // 순서를 위해 set to list
 
         Post post = Post.builder()
                 .title(title)
@@ -86,8 +90,8 @@ public class PostService {
     }
 
     // 게시글 전체 조회
-    public Page<Post> getPosts(Long userId, String username, Pageable pageable) {
-        return postRepository.findByUserIdOrUserUsernameAndIsTempFalseOrderByCreateAtDesc(userId, username, pageable);
+    public Page<Post> getPosts(Long userId, String username, String currentUsername, Pageable pageable) {
+        return postRepository.findPostsByUserIdOrUsernameForCurrentUser(userId, username, currentUsername, pageable);
     }
 
     // 게시글 한 개 조회
@@ -150,5 +154,10 @@ public class PostService {
     // 공개 글 좋아요 순으로 조회
     public Page<Post> getPublicPostsSortedByLikes(Pageable pageable) {
         return postRepository.findByIsSecretFalseAndIsTempFalseOrderByLikesDesc(pageable);
+    }
+
+    // 태그별 공개 게시글 조회
+    public Page<Post> getPostsByTag(Long userId, String username, String currentUsername, String tagName, Pageable pageable) {
+        return postRepository.findPostsByUserIdOrUsernameAndTagNameForCurrentUser(userId, username, currentUsername, tagName, pageable);
     }
 }

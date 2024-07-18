@@ -3,7 +3,7 @@ package com.example.blogproject.post.entity;
 import com.example.blogproject.comment.Comment;
 import com.example.blogproject.global.entity.BaseTimeEntity;
 import com.example.blogproject.likes.Likes;
-import com.example.blogproject.tag.Tag;
+import com.example.blogproject.tag.entity.Tag;
 import com.example.blogproject.uploadfile.UploadFile;
 import com.example.blogproject.user.entity.User;
 import jakarta.persistence.*;

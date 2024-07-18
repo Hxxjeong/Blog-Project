@@ -10,15 +10,16 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-    // 임시 글 필터링 (개인 블로그용)
-    @Query("SELECT p " +
-            "FROM Post p " +
+    // 전체 글 조회 (개인 블로그용)
+    @Query("SELECT p FROM Post p " +
             "WHERE (p.user.id = :userId OR p.user.username = :username) " +
             "AND p.isTemp = false " +
+            "AND (p.isSecret = false OR p.user.username = :currentUsername) " +
             "ORDER BY p.createAt DESC")
-    Page<Post> findByUserIdOrUserUsernameAndIsTempFalseOrderByCreateAtDesc(
+    Page<Post> findPostsByUserIdOrUsernameForCurrentUser(
             @Param("userId") Long userId,
             @Param("username") String username,
+            @Param("currentUsername") String currentUsername,
             Pageable pageable
     );
 
@@ -35,4 +36,19 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     // 공개글 좋아요 순으로 조회
     Page<Post> findByIsSecretFalseAndIsTempFalseOrderByLikesDesc(Pageable pageable);
+
+    // 태그별 포스트 조회 (개인 블로그용)
+    @Query("SELECT DISTINCT p FROM Post p JOIN FETCH p.tags t " +
+            "WHERE (p.user.id = :userId OR p.user.username = :username) " +
+            "AND p.isTemp = false " +
+            "AND (p.isSecret = false OR p.user.username = :currentUsername) " +
+            "AND t.name = :tagName " +
+            "ORDER BY p.createAt DESC")
+    Page<Post> findPostsByUserIdOrUsernameAndTagNameForCurrentUser(
+            @Param("userId") Long userId,
+            @Param("username") String username,
+            @Param("currentUsername") String currentUsername,
+            @Param("tagName") String tagName,
+            Pageable pageable
+    );
 }

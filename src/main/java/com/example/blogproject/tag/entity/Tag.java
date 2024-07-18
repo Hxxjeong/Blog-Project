@@ -1,4 +1,4 @@
-package com.example.blogproject.tag;
+package com.example.blogproject.tag.entity;
 
 import com.example.blogproject.blog.Blog;
 import com.example.blogproject.post.entity.Post;
@@ -20,6 +20,7 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne
