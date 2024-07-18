@@ -1,6 +1,8 @@
-package com.example.blogproject.uploadfile;
+package com.example.blogproject.uploadfile.service;
 
 import com.example.blogproject.post.entity.Post;
+import com.example.blogproject.uploadfile.entity.Thumbnail;
+import com.example.blogproject.uploadfile.repository.ThumbnailRepository;
 import com.example.blogproject.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,18 +19,18 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UploadFileService {
-    private final UploadFileRepository uploadFileRepository;
+public class ThumbnailService {
+    private final ThumbnailRepository thumbnailRepository;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
 
     @Transactional
-    public UploadFile saveImage(MultipartFile image, User user) throws IOException {
+    public Thumbnail saveImage(MultipartFile image, User user) throws IOException {
         String originName = image.getOriginalFilename();
         String storedName = UUID.randomUUID() + "_" + originName;
 
-        UploadFile uploadFile = UploadFile.builder()
+        Thumbnail uploadFile = Thumbnail.builder()
                 .originName(originName)
                 .storedName(storedName)
                 .user(user)
@@ -48,7 +50,7 @@ public class UploadFileService {
     // 이미지 수정
     @Transactional
     public void updateImage(Post post, MultipartFile newImageFile) throws IOException {
-        UploadFile image = post.getImage();
+        Thumbnail image = post.getImage();
 
         String originName = newImageFile.getOriginalFilename();
         String storedName = UUID.randomUUID() + "_" + originName;
@@ -79,7 +81,7 @@ public class UploadFileService {
         File destination = new File(destinationDir, storedName);
         newImageFile.transferTo(destination);
 
-        uploadFileRepository.save(image);
+        thumbnailRepository.save(image);
     }
 
     // 이미지 삭제

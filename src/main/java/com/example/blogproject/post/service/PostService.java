@@ -7,9 +7,9 @@ import com.example.blogproject.post.entity.Post;
 import com.example.blogproject.post.repository.PostRepository;
 import com.example.blogproject.tag.entity.Tag;
 import com.example.blogproject.tag.repository.TagRepository;
-import com.example.blogproject.uploadfile.UploadFile;
-import com.example.blogproject.uploadfile.UploadFileRepository;
-import com.example.blogproject.uploadfile.UploadFileService;
+import com.example.blogproject.uploadfile.entity.Thumbnail;
+import com.example.blogproject.uploadfile.repository.ThumbnailRepository;
+import com.example.blogproject.uploadfile.service.ThumbnailService;
 import com.example.blogproject.user.entity.User;
 import com.example.blogproject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +31,8 @@ public class PostService {
     private final BlogService blogService;
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
-    private final UploadFileRepository uploadFileRepository;
-    private final UploadFileService uploadFileService;
+    private final ThumbnailRepository thumbnailRepository;
+    private final ThumbnailService thumbnailService;
 
     // 글 작성
     @Transactional
@@ -77,9 +77,9 @@ public class PostService {
 
         if(image != null && !image.isEmpty()) {
             try {
-                UploadFile uploadFile = uploadFileService.saveImage(image, user);
+                Thumbnail uploadFile = thumbnailService.saveImage(image, user);
                 uploadFile.setPost(savedPost);
-                uploadFileRepository.save(uploadFile);
+                thumbnailRepository.save(uploadFile);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -114,9 +114,9 @@ public class PostService {
                 .collect(Collectors.toList());
 
         // 이미지 처리
-        if (updateDto.isRemoveImage()) uploadFileService.deleteImage(post);
+        if (updateDto.isRemoveImage()) thumbnailService.deleteImage(post);
         else if (updateDto.getImage() != null && !updateDto.getImage().isEmpty())
-            uploadFileService.updateImage(post, updateDto.getImage());
+            thumbnailService.updateImage(post, updateDto.getImage());
 
         post.update(updateDto.getTitle(), updateDto.getContent(), updateDto.isSecret(), updateDto.isTemp(), updateTags);
 

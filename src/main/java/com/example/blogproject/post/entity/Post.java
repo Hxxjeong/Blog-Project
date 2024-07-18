@@ -4,7 +4,7 @@ import com.example.blogproject.comment.Comment;
 import com.example.blogproject.global.entity.BaseTimeEntity;
 import com.example.blogproject.likes.Likes;
 import com.example.blogproject.tag.entity.Tag;
-import com.example.blogproject.uploadfile.UploadFile;
+import com.example.blogproject.uploadfile.entity.Thumbnail;
 import com.example.blogproject.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -33,7 +33,7 @@ public class Post extends BaseTimeEntity {
     private String content;
 
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private UploadFile image;
+    private Thumbnail image;
 
     @Column(nullable = false)
     private boolean isSecret;
@@ -60,7 +60,7 @@ public class Post extends BaseTimeEntity {
     private List<Likes> likes = new ArrayList<>();
 
     @Builder
-    public Post(String title, String content, UploadFile image, boolean isSecret, boolean isTemp, User user, List<Tag> tags) {
+    public Post(String title, String content, Thumbnail image, boolean isSecret, boolean isTemp, User user, List<Tag> tags) {
         this.title = title;
         this.content = content;
         this.image = image;
@@ -80,7 +80,7 @@ public class Post extends BaseTimeEntity {
         this.tags.addAll(tags);
     }
 
-    public void setImage(UploadFile image) {
+    public void setImage(Thumbnail image) {
         if (this.image != null) {
             this.image.setPost(null);
         }

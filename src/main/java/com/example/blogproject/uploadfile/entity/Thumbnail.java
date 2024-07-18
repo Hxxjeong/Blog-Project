@@ -1,4 +1,4 @@
-package com.example.blogproject.uploadfile;
+package com.example.blogproject.uploadfile.entity;
 
 import com.example.blogproject.global.entity.BaseTimeEntity;
 import com.example.blogproject.post.entity.Post;
@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "upload_files")
+@Table(name = "thumbnails")
 @Getter
 @Setter
 @NoArgsConstructor
-public class UploadFile extends BaseTimeEntity {
+public class Thumbnail extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,7 +34,7 @@ public class UploadFile extends BaseTimeEntity {
     private User user;
 
     @Builder
-    public UploadFile(String originName, String storedName, User user) {
+    public Thumbnail(String originName, String storedName, User user) {
         this.originName = originName;
         this.storedName = storedName;
         this.user = user;
