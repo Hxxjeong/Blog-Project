@@ -1,6 +1,5 @@
 package com.example.blogproject.user.service;
 
-import com.example.blogproject.blog.BlogService;
 import com.example.blogproject.role.Role;
 import com.example.blogproject.role.RoleRepository;
 import com.example.blogproject.user.entity.User;

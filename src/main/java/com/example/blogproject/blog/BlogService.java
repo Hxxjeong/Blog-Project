@@ -28,11 +28,4 @@ public class BlogService {
     public Blog findBlog(Long id) {
         return blogRepository.findByUserId(id);
     }
-
-    // 블로그 이름 수정
-    @Transactional
-    public Blog update(Long id) {
-        Blog blog = blogRepository.findByUserId(id);
-        return blog;
-    }
 }
