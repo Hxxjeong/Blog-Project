@@ -138,3 +138,20 @@ main {
     background-color: #12B886;
     color: #fff;
 }
+
+/* Tag styles */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.tag {
+    background-color: #eee;
+    color: #333;
+    border-radius: 3px;
+    padding: 2px 8px;
+    font-size: 12px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}

@@ -30,6 +30,9 @@
                 <span th:text="${#temporals.format(post.createAt, 'yyyy년 MM월 dd일')}">작성일</span>
                 <span th:text="${post.user.username}">작성자</span>
             </div>
+            <div class="tags">
+                <span class="tag" th:each="tag : ${post.tags}" th:text="${tag.name}" th:if="${post.tags.size() > 0}">태그</span>
+            </div>
             <div class="post-actions">
                 <a th:href="@{'/@' + ${post.user.username} + '/' + ${post.id}}" class="read-more">읽기</a>
                 <span class="likes-count" th:text="${post.likes.size()} + ' 좋아요'"></span>
