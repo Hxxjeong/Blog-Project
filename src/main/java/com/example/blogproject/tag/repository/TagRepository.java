@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Long> {
-    Optional<Tag> findByName(String name);
     Optional<Tag> findByNameAndBlog(String name, Blog blog);
 
     // 블로그에서 사용한 태그 개수 확인
