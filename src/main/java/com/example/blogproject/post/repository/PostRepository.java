@@ -1,12 +1,15 @@
 package com.example.blogproject.post.repository;
 
 import com.example.blogproject.post.entity.Post;
+import com.example.blogproject.user.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
@@ -51,4 +54,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             @Param("tagName") String tagName,
             Pageable pageable
     );
+
+    // 회원 탈퇴 시 포스트 삭제하기 위함
+    List<Post> findAllByUser(User user);
 }

@@ -3,12 +3,15 @@ package com.example.blogproject.user.controller;
 import com.example.blogproject.blog.BlogService;
 import com.example.blogproject.user.service.UserService;
 import com.example.blogproject.user.entity.User;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -131,4 +134,25 @@ public class UserController {
         }
         return "redirect:/";
     }
+
+    // 회원 탈퇴
+    @PostMapping("/bye")
+    public String deleteUser(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
+        if (authentication != null) {
+            userService.deleteUser(authentication.getName());
+
+            // 명시적으로 로그아웃 처리
+            try {
+                request.logout();
+            } catch (ServletException e) {
+                e.printStackTrace(); // 로그아웃 실패 시 처리
+            }
+
+            SecurityContextHolder.clearContext(); // 로그아웃 처리
+
+            return "redirect:/";
+        }
+        return "redirect:/login"; // 인증되지 않은 사용자는 로그인 페이지로 리다이렉트
+    }
+
 }

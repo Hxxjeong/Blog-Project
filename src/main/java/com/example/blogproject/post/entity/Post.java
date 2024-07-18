@@ -41,7 +41,7 @@ public class Post extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean isTemp;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

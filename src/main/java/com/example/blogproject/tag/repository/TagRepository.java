@@ -20,4 +20,6 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
             "AND (p.isSecret = false OR p.user.username = :currentUsername) " +
             "GROUP BY t.id")
     List<Object[]> findTagsWithPostCountByBlogId(@Param("blogId") Long blogId, @Param("currentUsername") String currentUsername);
+
+    List<Tag> findAllByBlog(Blog blog);
 }

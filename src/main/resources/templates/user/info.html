@@ -51,7 +51,7 @@
     <hr>
     <h4 class="danger-zone">DANGEROUS ZONE</h4>
     <div class="setting-section">
-        <form th:action="@{/setting/delete}" method="post">
+        <form th:action="@{/bye}" method="post" onsubmit="return confirm('정말로 탈퇴하시겠습니까?');">
             <button class="delete-button" type="submit">회원 탈퇴</button>
         </form>
     </div>
