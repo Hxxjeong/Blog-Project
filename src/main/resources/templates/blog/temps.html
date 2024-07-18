@@ -21,7 +21,9 @@
         <span th:text="${#temporals.format(post.createAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
         <div class="link-container">
             <a th:href="@{'/@' + ${post.user.username} + '/' + ${post.id} + '/edit'}" class="button">수정</a>
-            <a th:href="@{'/@' + ${post.user.username} + '/' + ${post.id} + '/delete'}" class="button">삭제</a>
+<!--            <a th:href="@{'/@' + ${post.user.username} + '/' + ${post.id} + '/delete'}" class="button">삭제</a>-->
+            <a href="#" th:attr="data-username=${post.user.username}, data-post-id=${post.id}"
+               onclick="confirmDeletePost(this.getAttribute('data-username'), this.getAttribute('data-post-id')); return false;">삭제</a>
         </div>
     </div>
 </div>
@@ -31,6 +33,17 @@
 </div>
 
 <script type="text/javascript" th:src="@{/js/showProfile.js}"></script>
+<script>
+    function confirmDeletePost(username, postId) {
+        if (confirm('정말로 이 글을 삭제하시겠습니까?')) {
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/@' + username + '/' + postId + '/delete';
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>
 
 </body>
 </html>
