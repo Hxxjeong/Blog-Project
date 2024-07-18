@@ -4,10 +4,7 @@ import com.example.blogproject.blog.Blog;
 import com.example.blogproject.likes.Likes;
 import com.example.blogproject.role.Role;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -57,6 +54,9 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Blog blog;
+
+//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private ProfileImage profileImage;
 
     @Builder
     public User(String username, String password, String name, String email) {

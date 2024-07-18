@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Settings</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/userinfo.css}">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container">
+    <h1>사용자 정보 수정</h1>
+
+    <!--<div class="profile-section">-->
+    <!--    <img th:src="${userInfo.profileImage != null ? userInfo.profileImage : '/img/profile-image.png'}"-->
+    <!--         alt="Profile Image" class="profile-image">-->
+    <!--    <h1 th:text="${userInfo.name}">유저 이름</h1>-->
+    <!--    <button class="edit-button">이미지 업로드</button>-->
+    <!--    <button class="edit-button">이미지 제거</button>-->
+    <!--</div>-->
+
+    <!--    <div class="setting-section">-->
+    <!--        <h2>프로필 이미지</h2>-->
+    <!--        <input type="file" name="profileImage">-->
+    <!--        <button type="button" class="edit-button" onclick="removeImage()">이미지 제거</button>-->
+    <!--    </div>-->
+
+    <form th:action="@{/setting}" method="post" enctype="multipart/form-data">
+        <div class="setting-section">
+            <label for="name">유저 이름</label>
+            <input type="text" id="name" name="name" th:value="${userInfo.name}">
+        </div>
+
+        <div class="setting-section">
+            <label for="blogName">블로그 이름</label>
+            <input type="text" id="blogName" name="blogName" th:value="${userInfo.blogName}">
+        </div>
+
+        <div class="setting-section">
+            <label for="email">이메일 주소</label>
+            <input type="email" id="email" name="email" th:value="${userInfo.email}">
+        </div>
+
+        <div class="setting-section">
+            <button class="edit-button" type="submit">수정 완료</button>
+            <a class="edit-button" th:href="@{/}">메인으로</a>
+        </div>
+    </form>
+
+    <hr>
+    <h4 class="danger-zone">DANGEROUS ZONE</h4>
+    <div class="setting-section">
+        <form th:action="@{/setting/delete}" method="post">
+            <button class="delete-button" type="submit">회원 탈퇴</button>
+        </form>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let message = /*[[${message}]]*/ '';
+    let error = /*[[${error}]]*/ '';
+
+    if(message) {
+        alert(message);
+    }
+    if(error) {
+        alert(error);
+    }
+    /*]]>*/
+</script>
+<script type="text/javascript" th:src="@{/js/showProfile.js}"></script>
+</body>
+</html>
