@@ -65,6 +65,6 @@ public class BlogController {
         model.addAttribute("tagCounts", tagCounts); // 해당 블로그에서 사용한 태그
         model.addAttribute("selectedTag", tag);
 
-        return "/blog/posts";
+        return "blog/posts";
     }
 }
